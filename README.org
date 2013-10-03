@@ -1,0 +1,13 @@
+* org-asciidoc
+
+An Org Mode Exporter Backend For AsciiDoc
+
+* Setup
+  1) Make sure you have org-mode v8.0 or later
+  2) Clone this repository
+  3) Add the following to your .emacs
+     #+BEGIN_SRC lisp
+       (add-to-list 'load-path "~/path/to/org-asciidoc/")
+       (require 'ox-asciidoc)
+     #+END_SRC
+  4) open a .org file and run =org-asciidoc-export-as-asciidoc=
