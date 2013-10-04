@@ -153,15 +153,17 @@ contextual information."
 		  (plain-list (cl-incf depth)))))
     depth))
 
+(defvar org-asciidoc-list-bullets
+  '((unordered . ?*)
+    (ordered . ?.)))
+
 (defun org-asciidoc-list-item-delimiter (item)
   (let* ((plain-list (org-export-get-parent item))
 	 (type (org-element-property :type plain-list))
-	 (depth (org-asciidoc-item-list-depth item)))
-    (case type
-      (unordered
-       (make-string depth ?*))
-      (ordered
-       (make-string depth ?.)))))
+	 (depth (org-asciidoc-item-list-depth item))
+	 (bullet (cdr (assq type org-asciidoc-list-bullets))))
+    (when bullet
+     (make-string depth bullet))))
 
 (defun org-asciidoc-item (item contents info)
   "Transcode an ITEM element into AsciiDoc format.
