@@ -36,10 +36,10 @@
 
 (org-export-define-backend 'asciidoc
   '((babel-call . org-asciidoc-identity)
-    (bold . org-asciidoc-identity)
+    (bold . org-asciidoc-bold)
     (center-block . org-asciidoc-identity)
     (clock . org-asciidoc-identity)
-    (code . org-asciidoc-identity)
+    (code . org-asciidoc-code)
     (comment . (lambda (&rest args) ""))
     (comment-block . (lambda (&rest args) ""))
     (diary-sexp . org-asciidoc-identity)
@@ -55,7 +55,7 @@
     (inline-babel-call . org-asciidoc-identity)
     (inline-src-block . org-asciidoc-identity)
     (inlinetask . org-asciidoc-identity)
-    (italic . org-asciidoc-identity)
+    (italic . org-asciidoc-italic)
     (item . org-asciidoc-item)
     (keyword . org-asciidoc-identity)
     (latex-environment . org-asciidoc-identity)
@@ -74,7 +74,7 @@
     (special-block . org-asciidoc-identity)
     (src-block . org-asciidoc-identity)
     (statistics-cookie . org-asciidoc-identity)
-    (strike-through . org-asciidoc-identity)
+    (strike-through . org-asciidoc-strike-through)
     (subscript . org-asciidoc-identity)
     (superscript . org-asciidoc-identity)
     (table . org-asciidoc-identity)
@@ -82,8 +82,8 @@
     (table-row . org-asciidoc-identity)
     (target . org-asciidoc-identity)
     (timestamp . org-asciidoc-identity)
-    (underline . org-asciidoc-identity)
-    (verbatim . org-asciidoc-identity)
+    (underline . org-asciidoc-underline)
+    (verbatim . org-asciidoc-verbatim)
     (verse-block . org-asciidoc-identity))
   :options-alist '((:headline-levels nil nil 4 t))
   :menu-entry
@@ -97,11 +97,34 @@
 	      (if a (org-asciidoc-export-to-asciidoc t s v)
 		(org-open-file (org-asciidoc-export-to-asciidoc nil s v))))))))
 
+
 (defun org-asciidoc-identity (blob contents info)
   "Transcode BLOB element or object back into Org syntax.
 CONTENTS is its contents, as a string or nil.  INFO is ignored."
   (org-export-expand blob contents))
 
+
+;;; Inline Text Format
+(defun org-asciidoc-bold (bold contents info)
+  (concat "*" contents "*"))
+
+(defun org-asciidoc-code (code contents info)
+  (concat "+" (org-element-property :value code) "+"))
+
+(defun org-asciidoc-italic (italic contents info)
+  (concat "'" contents "'"))
+
+(defun org-asciidoc-strike-through (strike-through contents info)
+  (concat "[line-through]#" contents "#"))
+
+(defun org-asciidoc-underline (underline contents info)
+  (concat "[underline]#" contents "#"))
+
+(defun org-asciidoc-verbatim (verbatim contents info)
+  (concat "+" (org-element-property :value verbatim) "+"))
+
+
+;;; Head Line
 (defun org-asciidoc-headline (headline contents info)
   "Transcode HEADLINE element into AsciiDoc format.
 CONTENTS is the headline contents."
@@ -113,6 +136,8 @@ CONTENTS is the headline contents."
       (let ((delimiter (make-string (1+ level) ?=)))
 	(concat "\n" delimiter " " title " " delimiter "\n" contents)))))
 
+
+;;; List
 (defun org-asciidoc-plain-list (plain-list contents info)
   "Transcode a PLAIN-LIST element into AsciiDoc format.
 CONTENTS is the contents of the list.  INFO is a plist holding
@@ -144,12 +169,15 @@ CONTENTS holds the contents of the item.  INFO is a plist holding
 contextual information."
   (format "%s %s" (org-asciidoc-list-item-delimiter item) contents))
 
+
+;;; Example Block
 (defun org-asciidoc-example-block (example-block contents info)
   "Transcode a EXAMPLE-BLOCK element into AsciiDoc format.
 CONTENTS is nil.  INFO is a plist holding contextual
 information."
   (let ((value (org-element-property :value example-block)))
     (concat "----\n" value "----")))
+
 
 ;;;###autoload
 (defun org-asciidoc-export-as-asciidoc (&optional async subtreep visible-only)
