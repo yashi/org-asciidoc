@@ -77,9 +77,9 @@
     (strike-through . org-asciidoc-strike-through)
     (subscript . org-asciidoc-identity)
     (superscript . org-asciidoc-identity)
-    (table . org-asciidoc-identity)
-    (table-cell . org-asciidoc-identity)
-    (table-row . org-asciidoc-identity)
+    (table . org-asciidoc-table)
+    (table-cell . org-asciidoc-table-cell)
+    (table-row . org-asciidoc-table-row)
     (target . org-asciidoc-identity)
     (timestamp . org-asciidoc-identity)
     (underline . org-asciidoc-underline)
@@ -179,6 +179,28 @@ CONTENTS is nil.  INFO is a plist holding contextual
 information."
   (let ((value (org-element-property :value example-block)))
     (concat "----\n" value "----")))
+
+
+;;; Table
+(defvar org-asciidoc-table-width-in-percent 80)
+
+(defun org-asciidoc-table (table contents info)
+  "Transcode TABLE element into AsciiDoc format."
+  (let ((has-header (org-export-table-has-header-p table info)))
+    (concat (format "[width=\"%d%%\",options=\"%s\"]\n"
+		    org-asciidoc-table-width-in-percent
+		    (if has-header "header"))
+	    "|====\n"
+	    contents
+	    "|====")))
+
+(defun org-asciidoc-table-row (table-row contents info)
+  "Transcode TABLE ROW element into AsciiDoc format."
+  (concat contents "\n"))
+
+(defun org-asciidoc-table-cell (table-cell contents info)
+  "Transcode TABLE CELL element into AsciiDoc format."
+  (concat "| " contents))
 
 
 ;;;###autoload
