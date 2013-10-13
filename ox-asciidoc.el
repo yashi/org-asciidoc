@@ -61,7 +61,7 @@
     (latex-environment . org-asciidoc-identity)
     (latex-fragment . org-asciidoc-identity)
     (line-break . org-asciidoc-identity)
-    (link . org-asciidoc-identity)
+    (link . org-asciidoc-link)
     (node-property . org-asciidoc-identity)
     (paragraph . org-asciidoc-identity)
     (plain-list . org-asciidoc-plain-list)
@@ -202,6 +202,38 @@ information."
   "Transcode TABLE CELL element into AsciiDoc format."
   (concat "| " contents))
 
+
+;;; Link
+(defun org-asciidoc-leading-slashp (str)
+  (and (> (length str) 0) (eq (aref str 0) ?/)))
+
+(defun org-asciidoc-link (link desc info)
+  "Transcode a LINK object into AsciiDoc format.
+DESC is the description part of the link, or the empty string.
+INFO is a plist holding contextual information.
+
+Org's LINK object is documented in \"Hyperlinks\".
+
+\"External Links\" are mostly converted to AsciiDoc's \"URL
+Inline Macros\".
+
+A relative path in the \"External Links\" with \"file\" schema is
+converted to AsciiDoc's \"link\" inline macro. If the path does
+not start with slash, we assume that the link is relative.
+
+Image files without description should be inlined, so they will
+be converted with AsciiDoc's image macro."
+  (let ((type (org-element-property :type link))
+	(path (org-element-property :path link)))
+    (cond
+     ((and (not desc) (org-file-image-p path))
+      (if (string= type "file")
+	  (format "image:%s[]" path)
+	(format "image:%s:%s[]" type path)))
+     ((and (string= type "file") (not (org-asciidoc-leading-slashp path)))
+      (format "link:%s[%s]" path (or desc path)))
+     (t
+      (format "%s:%s[%s]" type path (or desc (format "%s:%s" type path)))))))
 
 ;;;###autoload
 (defun org-asciidoc-export-as-asciidoc (&optional async subtreep visible-only)
