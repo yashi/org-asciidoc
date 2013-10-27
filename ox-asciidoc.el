@@ -57,7 +57,7 @@
     (inlinetask . org-asciidoc-identity)
     (italic . org-asciidoc-italic)
     (item . org-asciidoc-item)
-    (keyword . org-asciidoc-identity)
+    (keyword . (lambda (&rest args) ""))
     (latex-environment . org-asciidoc-identity)
     (latex-fragment . org-asciidoc-identity)
     (line-break . org-asciidoc-identity)
@@ -81,6 +81,7 @@
     (table-cell . org-asciidoc-table-cell)
     (table-row . org-asciidoc-table-row)
     (target . org-asciidoc-identity)
+    (template . org-asciidoc-template)
     (timestamp . org-asciidoc-identity)
     (underline . org-asciidoc-underline)
     (verbatim . org-asciidoc-verbatim)
@@ -234,6 +235,52 @@ be converted with AsciiDoc's image macro."
       (format "link:%s[%s]" path (or desc path)))
      (t
       (format "%s:%s[%s]" type path (or desc (format "%s:%s" type path)))))))
+
+
+;;; Template
+(defun org-asciidoc-make-withkey (key)
+  (intern (concat ":with-" (substring (symbol-name key) 1))))
+
+(defun org-asciidoc-info-get-with (info key)
+  "wrapper accessor to the communication channel.  Return the
+  value if and only if \"with-key\" is set to t."
+  (let ((withkey (org-asciidoc-make-withkey key)))
+    (and withkey
+	 (plist-get info withkey)
+	 (org-export-data (plist-get info key) info))))
+
+(defun org-asciidoc-info-get (info key)
+  (org-export-data (plist-get info key) info))
+
+(defun org-asciidoc-template--document-title (info)
+  (let ((title (org-asciidoc-info-get info :title))
+	(author (org-asciidoc-info-get-with info :author))
+	(email (org-asciidoc-info-get-with info :email)))
+    (concat
+     ;; The first line, title
+     (format "= %s =" title)
+     ;; The second line, name and email address "name <email@address>"
+     ;; no email if no author
+     (when author
+       (concat
+	"\n"
+	author
+	;; Put email address
+	(and email (format " <%s>" email))
+	"\n"))
+     ;; add some new lines for preamble
+     "\n\n")))
+
+(defun org-asciidoc-template (contents info)
+  "Return complete document string after AsciiDoc conversion.
+CONTENTS is the transcoded contents string.  INFO is a plist
+holding export options."
+  (concat
+   ;; 1. Build title block.
+   (org-asciidoc-template--document-title info)
+   ;; 2. Body
+   contents))
+
 
 ;;;###autoload
 (defun org-asciidoc-export-as-asciidoc (&optional async subtreep visible-only)
