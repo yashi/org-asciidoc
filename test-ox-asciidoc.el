@@ -43,7 +43,7 @@
 		   (org-export-as 'asciidoc nil nil t))
 		 str2)))
 
-(ert-deftest test-org-asciidoc/list ()
+(ert-deftest test-org-asciidoc/unordered-list ()
   (org-asciidoc-test-transcode-body
    "- list\n"
    "* list\n")
@@ -65,3 +65,12 @@
 *** list
 **** list
 ***** list\n"))
+
+(ert-deftest test-org-asciidoc/ordered-list ()
+  (org-asciidoc-test-transcode-body
+   "1. list 1\n
+2. list 2\n
+3. list 3\n"
+   ". list 1\n
+. list 2\n
+. list 3\n"))
