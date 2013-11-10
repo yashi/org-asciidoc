@@ -74,3 +74,33 @@
    ". list 1\n
 . list 2\n
 . list 3\n"))
+
+(ert-deftest test-org-asciidoc/bold-to-strong ()
+  (org-asciidoc-test-transcode-body
+   "*foo*"
+   "*foo*\n"))
+
+(ert-deftest test-org-asciidoc/italic-to-emphasized ()
+  (org-asciidoc-test-transcode-body
+   "/foo/"
+   "'foo'\n"))
+
+(ert-deftest test-org-asciidoc/underlined-to-underline ()
+  (org-asciidoc-test-transcode-body
+   "_foo_"
+   "[underline]#foo#\n"))
+
+(ert-deftest test-org-asciidoc/code-to-monospaced ()
+  (org-asciidoc-test-transcode-body
+   "=foo="
+   "+foo+\n"))
+
+(ert-deftest test-org-asciidoc/verbatim-to-monospaced ()
+  (org-asciidoc-test-transcode-body
+   "~foo~"
+   "+foo+\n"))
+
+(ert-deftest test-org-asciidoc/strikethrough-to-linethrough ()
+  (org-asciidoc-test-transcode-body
+   "+foo+"
+   "[line-through]#foo#\n"))
