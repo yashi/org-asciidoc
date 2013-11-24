@@ -76,6 +76,29 @@
    "[line-through]#foo#\n"))
 
 
+;;; Headlines to Titles
+(ert-deftest test-org-asciidoc/headline ()
+  (org-asciidoc-test-transcode-body
+   "* 1st headline
+** 2nd headline
+*** 3rd headline
+**** 4th headline
+***** 5th headline
+****** 6th headline
+******* 7th headline"
+"\n== 1st headline ==
+
+=== 2nd headline ===
+
+==== 3rd headline ====
+
+===== 4th headline =====
+* 5th headline
+** 6th headline
+*** 7th headline
+"))
+
+
 ;;; List
 (ert-deftest test-org-asciidoc/unordered-list ()
   (org-asciidoc-test-transcode-body
