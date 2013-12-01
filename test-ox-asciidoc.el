@@ -131,3 +131,37 @@
    ". list 1\n
 . list 2\n
 . list 3\n"))
+
+
+;;; Example Blocks to Listing Blocks
+(ert-deftest test-org-asciidoc/example-block-to-listing-block ()
+  (org-asciidoc-test-transcode-body
+   "#+BEGIN_EXAMPLE
+int main(void) {
+    printf(\"Hello, World\");
+}
+#+END_EXAMPLE"
+   "----
+int main(void) {
+    printf(\"Hello, World\");
+}
+----
+"))
+
+
+;;; Tables
+(ert-deftest test-org-asciidoc/table-to-table ()
+  (org-asciidoc-test-transcode-body
+   "| Name  | Phone | Age |
+|-------+-------+-----|
+| Peter |  1234 |  17 |
+| Anna  |  4321 |  25 |
+"
+   "[width=\"80%\",options=\"header\"]
+|====
+| Name| Phone| Age
+
+| Peter| 1234| 17
+| Anna| 4321| 25
+|====
+"))
