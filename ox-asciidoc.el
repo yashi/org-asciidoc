@@ -3,6 +3,8 @@
 ;; Copyright (C) 2013  Free Software Foundation, Inc.
 
 ;; Author: Yasushi SHOJI <yasushi.shoji@gmail.com>
+;; URL: https://github.com/yashi/org-asciidoc
+;; Package-Requires: ((org "8.2.5c"))
 ;; Keywords: org, asciidoc
 
 ;; This file is not part of GNU Emacs.
