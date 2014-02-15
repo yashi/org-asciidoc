@@ -340,8 +340,4 @@ Return output file name."
 
 (provide 'ox-asciidoc)
 
-;; Local variables:
-;; generated-autoload-file: "org-loaddefs.el"
-;; End:
-
 ;;; ox-asciidoc.el ends here
