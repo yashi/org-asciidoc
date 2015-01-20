@@ -32,6 +32,7 @@
 
 ;;; Code:
 (require 'ox)
+(require 'cl-lib)
 
 (defgroup org-export-asciidoc nil
   "Options for exporting Org mode files to Asciidoc."
