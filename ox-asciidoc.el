@@ -148,7 +148,15 @@ CONTENTS is the headline contents."
   "Transcode a PLAIN-LIST element into AsciiDoc format.
 CONTENTS is the contents of the list.  INFO is a plist holding
 contextual information."
-  contents)
+  (let ((prev (org-export-get-previous-element plain-list info)))
+    (concat
+     (when (and prev
+                (eq (org-element-type prev) 'paragraph)
+                (not (eq (org-element-type (org-export-get-parent plain-list))
+                         'item))
+                (zerop (org-element-property :post-blank prev)))
+       "\n")
+     contents)))
 
 (defun org-asciidoc-item-list-depth (item)
   (let ((parent item)

@@ -132,6 +132,31 @@
 . list 2\n
 . list 3\n"))
 
+(ert-deftest test-org-asciidoc/unordered-list-following-para ()
+  (org-asciidoc-test-transcode-body
+   "this is a paragraph.
+- and org allows any list to start right after para"
+
+   "this is a paragraph.
+
+* and org allows any list to start right after para\n")
+
+    (org-asciidoc-test-transcode-body
+   "* this is a headline
+- and org allows any list to start right after it"
+
+   "\n== this is a headline ==
+* and org allows any list to start right after it\n")
+
+    (org-asciidoc-test-transcode-body
+   "* this is a headline
+- and this is a list
+  - and org allows any list to start right after it"
+
+   "\n== this is a headline ==
+* and this is a list
+** and org allows any list to start right after it\n")
+    )
 
 ;;; Example Blocks to Listing Blocks
 (ert-deftest test-org-asciidoc/example-block-to-listing-block ()
