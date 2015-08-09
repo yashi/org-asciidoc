@@ -72,18 +72,18 @@
 (ert-deftest test-org-asciidoc/code-to-monospaced ()
   (org-asciidoc-test-transcode-body
    "=foo="
-   "+foo+\n")
+   "`foo`\n")
   (org-asciidoc-test-transcode-body
    "=foo ~ bar="
-   "+foo \\~ bar+\n"))
+   "`foo \\~ bar`\n"))
 
 (ert-deftest test-org-asciidoc/verbatim-to-monospaced ()
   (org-asciidoc-test-transcode-body
    "~foo~"
-   "+foo+\n")
+   "`foo`\n")
   (org-asciidoc-test-transcode-body
    "~foo ~ bar~"
-   "+foo \\~ bar+\n"))
+   "`foo \\~ bar`\n"))
 
 (ert-deftest test-org-asciidoc/strikethrough-to-linethrough ()
   (org-asciidoc-test-transcode-body
@@ -222,10 +222,10 @@ int main(void) {
    "*asdf \\~asdf asdf*\n")
   (org-asciidoc-test-transcode-body
    "~asdf ~asdf asdf~"
-   "+asdf \\~asdf asdf+\n")
+   "`asdf \\~asdf asdf`\n")
   (org-asciidoc-test-transcode-body
    "=asdf ~asdf asdf="
-   "+asdf \\~asdf asdf+\n"))
+   "`asdf \\~asdf asdf`\n"))
 
 
 ;;; Tables

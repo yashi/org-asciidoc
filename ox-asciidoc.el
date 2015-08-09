@@ -116,7 +116,7 @@ CONTENTS is its contents, as a string or nil.  INFO is ignored."
   (concat "*" contents "*"))
 
 (defun org-asciidoc-code (code contents info)
-  (concat "+" (org-asciidoc-encode-plain-text (org-element-property :value code)) "+"))
+  (concat "`" (org-asciidoc-encode-plain-text (org-element-property :value code)) "`"))
 
 (defun org-asciidoc-italic (italic contents info)
   (concat "'" contents "'"))
@@ -128,7 +128,7 @@ CONTENTS is its contents, as a string or nil.  INFO is ignored."
   (concat "[underline]#" contents "#"))
 
 (defun org-asciidoc-verbatim (verbatim contents info)
-  (concat "+" (org-asciidoc-encode-plain-text (org-element-property :value verbatim)) "+"))
+  (concat "`" (org-asciidoc-encode-plain-text (org-element-property :value verbatim)) "`"))
 
 
 ;;; Head Line
