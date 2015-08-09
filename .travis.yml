@@ -18,7 +18,7 @@ before_install:
   - sudo apt-get update -qq
   - sudo apt-get install -qq $EMACS
 
-  - git clone --branch $ORG_BRANCH $ORG_REPO && (cd org-mode && echo "autoloads:" > local.mk && make)
+  - git clone --depth=1 --branch $ORG_BRANCH $ORG_REPO && (cd org-mode && echo "autoloads:" > local.mk && make)
 
 script:
   - make test
