@@ -190,3 +190,21 @@ int main(void) {
 | Anna| 4321| 25
 |====
 "))
+
+
+;;; Source block
+(ert-deftest test-org-asciidoc/source ()
+  (org-asciidoc-test-transcode-body
+   "#+BEGIN_SRC emacs-lisp
+  (defun org-xor (a b)
+    \"Exclusive or.\"
+    (if a (not b) b))
+#+END_SRC"
+
+   "[source,emacs-lisp]
+----
+(defun org-xor (a b)
+  \"Exclusive or.\"
+  (if a (not b) b))
+----
+"))

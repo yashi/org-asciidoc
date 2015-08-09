@@ -77,7 +77,7 @@
     (radio-target . org-asciidoc-identity)
     (section . org-asciidoc-identity)
     (special-block . org-asciidoc-identity)
-    (src-block . org-asciidoc-identity)
+    (src-block . org-asciidoc-src-block)
     (statistics-cookie . org-asciidoc-identity)
     (strike-through . org-asciidoc-strike-through)
     (subscript . org-asciidoc-identity)
@@ -193,6 +193,16 @@ CONTENTS is nil.  INFO is a plist holding contextual
 information."
   (let ((value (org-element-property :value example-block)))
     (concat "----\n" value "----")))
+
+
+;;; Source Block
+(defun org-asciidoc-src-block (src-block contents info)
+  "Transcode a SRC-BLOCK element into AsciiDoc format.
+CONTENTS is nil.  INFO is a plist holding contextual
+information."
+  (let ((value (org-element-property :value src-block))
+        (lang (org-element-property :language src-block)))
+    (format "[source,%s]\n----\n%s----" lang value)))
 
 
 ;;; Table
