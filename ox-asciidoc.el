@@ -303,21 +303,25 @@ be converted with AsciiDoc's image macro."
 (defun org-asciidoc-template--document-title (info)
   (let ((title (org-asciidoc-info-get info :title))
 	(author (org-asciidoc-info-get-with info :author))
-	(email (org-asciidoc-info-get-with info :email)))
+	(email (org-asciidoc-info-get-with info :email))
+        (date (org-asciidoc-info-get-with info :date)))
     (concat
      ;; The first line, title
-     (format "= %s =" title)
+     (format "= %s =\n" title)
      ;; The second line, name and email address "name <email@address>"
      ;; no email if no author
-     (when author
-       (concat
-	"\n"
-	author
-	;; Put email address
-	(and email (format " <%s>" email))
-	"\n"))
-     ;; add some new lines for preamble
-     "\n\n")))
+     (when (org-string-nw-p author)
+       (concat author
+               ;; Put email address
+               (and (org-string-nw-p email) (concat " <" email ">"))
+               "\n"))
+     ;; The third line, rev number and date
+     ;; (when date
+     ;;   (concat date "\n"))
+     (when (org-string-nw-p date)
+       (concat date "\n"))
+     ;; add another new line for preamble
+     "\n")))
 
 (defun org-asciidoc-template (contents info)
   "Return complete document string after AsciiDoc conversion.

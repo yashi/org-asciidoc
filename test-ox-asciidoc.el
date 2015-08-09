@@ -38,6 +38,33 @@
 (require 'org-test)
 (require 'ox-asciidoc)
 
+(defun org-asciidoc-test-transcode-with-template (str1 str2)
+  (should (equal (org-test-with-temp-text str1
+		   (org-export-as 'asciidoc))
+		 str2)))
+
+(ert-deftest test-rog-asciidoc/title ()
+  (org-asciidoc-test-transcode-with-template
+   "#+AUTHOR: John Smith
+#+Title: This is the title"
+
+   "= This is the title =
+John Smith
+
+")
+
+  (org-asciidoc-test-transcode-with-template
+   "#+Title: This is the title
+#+AUTHOR: John Smith
+#+Date: 2001-01-01"
+
+   "= This is the title =
+John Smith
+2001-01-01
+
+")
+  )
+
 (defun org-asciidoc-test-transcode-body (str1 str2)
   (should (equal (org-test-with-temp-text str1
 		   (org-export-as 'asciidoc nil nil t))
