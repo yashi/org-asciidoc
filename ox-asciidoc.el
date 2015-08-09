@@ -33,6 +33,7 @@
 ;;; Code:
 (require 'ox)
 (require 'cl-lib)
+(require 'ox-html)
 
 (defgroup org-export-asciidoc nil
   "Options for exporting Org mode files to Asciidoc."
@@ -270,10 +271,13 @@ Image files without description should be inlined, so they will
 be converted with AsciiDoc's image macro."
   (let ((type (org-element-property :type link))
 	(path (org-element-property :path link)))
+    (message (org-export-read-attribute :attr_asciidoc link))
     (cond
      ((and (not desc) (org-file-image-p path))
       (if (string= type "file")
-	  (format "image:%s[]" path)
+          (if (org-html-standalone-image-p link info)
+              (format "image::%s[scaledwidth=100%%]" path)
+            (format "image:%s[]" path))
 	(format "image:%s:%s[]" type path)))
      ((and (string= type "file") (not (org-asciidoc-leading-slashp path)))
       (format "link:%s[%s]" path (or desc path)))
