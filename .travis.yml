@@ -2,6 +2,9 @@
 # So, use `C' instead.
 language: c
 
+git:
+  depth: 1
+
 env:
   global:
     - ORG_REPO=git://orgmode.org/org-mode.git
