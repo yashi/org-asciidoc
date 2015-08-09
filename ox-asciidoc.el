@@ -70,6 +70,7 @@
     (node-property . org-asciidoc-identity)
     (paragraph . org-asciidoc-identity)
     (plain-list . org-asciidoc-plain-list)
+    (plain-text . org-asciidoc-plain-text)
     (planning . org-asciidoc-identity)
     (property-drawer . (lambda (&rest args) ""))
     (quote-block . org-asciidoc-identity)
@@ -115,7 +116,7 @@ CONTENTS is its contents, as a string or nil.  INFO is ignored."
   (concat "*" contents "*"))
 
 (defun org-asciidoc-code (code contents info)
-  (concat "+" (org-element-property :value code) "+"))
+  (concat "+" (org-asciidoc-encode-plain-text (org-element-property :value code)) "+"))
 
 (defun org-asciidoc-italic (italic contents info)
   (concat "'" contents "'"))
@@ -127,7 +128,7 @@ CONTENTS is its contents, as a string or nil.  INFO is ignored."
   (concat "[underline]#" contents "#"))
 
 (defun org-asciidoc-verbatim (verbatim contents info)
-  (concat "+" (org-element-property :value verbatim) "+"))
+  (concat "+" (org-asciidoc-encode-plain-text (org-element-property :value verbatim)) "+"))
 
 
 ;;; Head Line
@@ -205,6 +206,24 @@ information."
         (linum (if (org-element-property :number-lines src-block)
                    ",linenums" "")))
     (format "[source,%s%s]\n----\n%s----" lang linum value)))
+
+
+;;; Plain Text
+(defvar org-asciidoc-protect-char-alist
+  '(("~" . "\\~"))
+  "Alist of characters to be converted by `org-asciidoc-plain-text'.")
+
+(defun org-asciidoc-encode-plain-text (text)
+  (mapc
+   (lambda (pair)
+     (setq text (replace-regexp-in-string (car pair) (cdr pair) text t t)))
+   org-asciidoc-protect-char-alist)
+  text)
+
+(defun org-asciidoc-plain-text (text info)
+  "Transcode TEXT element into AsciiDoc format."
+  (setq text (org-asciidoc-encode-plain-text text))
+  text)
 
 
 ;;; Table

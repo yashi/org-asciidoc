@@ -48,32 +48,50 @@
 (ert-deftest test-org-asciidoc/bold-to-strong ()
   (org-asciidoc-test-transcode-body
    "*foo*"
-   "*foo*\n"))
+   "*foo*\n")
+  (org-asciidoc-test-transcode-body
+   "*foo ~ bar*"
+   "*foo \\~ bar*\n"))
 
 (ert-deftest test-org-asciidoc/italic-to-emphasized ()
   (org-asciidoc-test-transcode-body
    "/foo/"
-   "'foo'\n"))
+   "'foo'\n")
+  (org-asciidoc-test-transcode-body
+   "/foo ~ bar/"
+   "'foo \\~ bar'\n"))
 
 (ert-deftest test-org-asciidoc/underlined-to-underline ()
   (org-asciidoc-test-transcode-body
    "_foo_"
-   "[underline]#foo#\n"))
+   "[underline]#foo#\n")
+    (org-asciidoc-test-transcode-body
+   "_foo ~ bar_"
+   "[underline]#foo \\~ bar#\n"))
 
 (ert-deftest test-org-asciidoc/code-to-monospaced ()
   (org-asciidoc-test-transcode-body
    "=foo="
-   "+foo+\n"))
+   "+foo+\n")
+  (org-asciidoc-test-transcode-body
+   "=foo ~ bar="
+   "+foo \\~ bar+\n"))
 
 (ert-deftest test-org-asciidoc/verbatim-to-monospaced ()
   (org-asciidoc-test-transcode-body
    "~foo~"
-   "+foo+\n"))
+   "+foo+\n")
+  (org-asciidoc-test-transcode-body
+   "~foo ~ bar~"
+   "+foo \\~ bar+\n"))
 
 (ert-deftest test-org-asciidoc/strikethrough-to-linethrough ()
   (org-asciidoc-test-transcode-body
    "+foo+"
-   "[line-through]#foo#\n"))
+   "[line-through]#foo#\n")
+  (org-asciidoc-test-transcode-body
+   "+foo ~ bar+"
+   "[line-through]#foo \\~ bar#\n"))
 
 
 ;;; Headlines to Titles
@@ -172,6 +190,42 @@ int main(void) {
 }
 ----
 "))
+
+
+;;; Plain Text
+(ert-deftest test-org-asciidoc/plain-text ()
+  (org-asciidoc-test-transcode-body
+   "~" "\\~\n")
+  (org-asciidoc-test-transcode-body
+   "~asdf"
+   "\\~asdf\n")
+  (org-asciidoc-test-transcode-body
+   "asdf~"
+   "asdf\\~\n")
+  (org-asciidoc-test-transcode-body
+   "asdf~asdf"
+   "asdf\\~asdf\n")
+  (org-asciidoc-test-transcode-body
+   "asdf ~ asdf"
+   "asdf \\~ asdf\n")
+  (org-asciidoc-test-transcode-body
+   "asdf *~* asdf"
+   "asdf *\\~* asdf\n")
+  (org-asciidoc-test-transcode-body
+   "asdf ~ asdf ~ asdf"
+   "asdf \\~ asdf \\~ asdf\n")
+  (org-asciidoc-test-transcode-body
+   "asdf ~asdf ~asdf"
+   "asdf \\~asdf \\~asdf\n")
+  (org-asciidoc-test-transcode-body
+   "*asdf ~asdf asdf*"
+   "*asdf \\~asdf asdf*\n")
+  (org-asciidoc-test-transcode-body
+   "~asdf ~asdf asdf~"
+   "+asdf \\~asdf asdf+\n")
+  (org-asciidoc-test-transcode-body
+   "=asdf ~asdf asdf="
+   "+asdf \\~asdf asdf+\n"))
 
 
 ;;; Tables
