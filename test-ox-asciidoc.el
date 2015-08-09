@@ -208,3 +208,25 @@ int main(void) {
   (if a (not b) b))
 ----
 "))
+
+(ert-deftest test-org-asciidoc/source-with-linenumber ()
+  (org-asciidoc-test-transcode-body
+   "#+BEGIN_SRC C -n
+#include <stdio.h>
+int main(int argc, char *argv[])
+{
+	printf(\"Hello, World\");
+	return 0;
+}
+#+END_SRC"
+
+   "[source,C,linenums]
+----
+#include <stdio.h>
+int main(int argc, char *argv[])
+{
+	printf(\"Hello, World\");
+	return 0;
+}
+----
+"))

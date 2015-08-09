@@ -201,8 +201,10 @@ information."
 CONTENTS is nil.  INFO is a plist holding contextual
 information."
   (let ((value (org-element-property :value src-block))
-        (lang (org-element-property :language src-block)))
-    (format "[source,%s]\n----\n%s----" lang value)))
+        (lang (org-element-property :language src-block))
+        (linum (if (org-element-property :number-lines src-block)
+                   ",linenums" "")))
+    (format "[source,%s%s]\n----\n%s----" lang linum value)))
 
 
 ;;; Table
