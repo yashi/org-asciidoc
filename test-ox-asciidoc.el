@@ -211,11 +211,12 @@ int main(void) {
     printf(\"Hello, World\");
 }
 #+END_EXAMPLE"
-   "----
+
+   "....
 int main(void) {
     printf(\"Hello, World\");
 }
-----
+....
 "))
 
 
@@ -223,17 +224,17 @@ int main(void) {
 (ert-deftest test-org-asciidoc/fixed-width ()
   (org-asciidoc-test-transcode-body
    ": this is fixed width"
-   "----
+   "....
 this is fixed width
-----
+....
 ")
   (org-asciidoc-test-transcode-body
    ": how about
 : multi-lines"
-   "----
+   "....
 how about
 multi-lines
-----
+....
 "))
 
 ;;; Plain Text

@@ -194,7 +194,7 @@ contextual information."
 CONTENTS is nil.  INFO is a plist holding contextual
 information."
   (let ((value (org-element-property :value example-block)))
-    (concat "----\n" value "----")))
+    (concat "....\n" value "....")))
 
 
 ;;; Source Block
@@ -213,7 +213,7 @@ information."
 (defun org-asciidoc-fixed-width (fixed-width contents info)
   (let ((value (org-element-property :value fixed-width)))
     (and value
-         (concat "----\n" value "----"))))
+         (concat "....\n" value "...."))))
 
 
 ;;; Plain Text
