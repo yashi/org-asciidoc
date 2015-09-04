@@ -219,6 +219,23 @@ int main(void) {
 "))
 
 
+;;; Fixed width
+(ert-deftest test-org-asciidoc/fixed-width ()
+  (org-asciidoc-test-transcode-body
+   ": this is fixed width"
+   "----
+this is fixed width
+----
+")
+  (org-asciidoc-test-transcode-body
+   ": how about
+: multi-lines"
+   "----
+how about
+multi-lines
+----
+"))
+
 ;;; Plain Text
 (ert-deftest test-org-asciidoc/plain-text ()
   (org-asciidoc-test-transcode-body

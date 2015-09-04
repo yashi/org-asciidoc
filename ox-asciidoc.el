@@ -53,7 +53,7 @@
     (dynamic-block . org-asciidoc-identity)
     (entity . org-asciidoc-identity)
     (example-block . org-asciidoc-example-block)
-    (fixed-width . org-asciidoc-identity)
+    (fixed-width . org-asciidoc-fixed-width)
     (footnote-definition . org-asciidoc-identity)
     (footnote-reference . org-asciidoc-identity)
     (headline . org-asciidoc-headline)
@@ -207,6 +207,13 @@ information."
         (linum (if (org-element-property :number-lines src-block)
                    ",linenums" "")))
     (format "[source,%s%s]\n----\n%s----" lang linum value)))
+
+
+;;; Fixed Width
+(defun org-asciidoc-fixed-width (fixed-width contents info)
+  (let ((value (org-element-property :value fixed-width)))
+    (and value
+         (concat "----\n" value "----"))))
 
 
 ;;; Plain Text
