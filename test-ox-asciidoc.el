@@ -170,12 +170,84 @@ John Smith
 
 (ert-deftest test-org-asciidoc/ordered-list ()
   (org-asciidoc-test-transcode-body
+   "1. list 1
+2. list 2
+3. list 3"
+   ". list 1
+. list 2
+. list 3\n")
+  (org-asciidoc-test-transcode-body
    "1. list 1\n
 2. list 2\n
 3. list 3\n"
    ". list 1\n
 . list 2\n
-. list 3\n"))
+. list 3\n")
+    (org-asciidoc-test-transcode-body
+   "1. list 1
+
+2. list 2
+
+3. list 3"
+
+   ". list 1
+
+. list 2
+
+. list 3\n")
+    (org-asciidoc-test-transcode-body
+   "1. list 1
+
+2. list 2
+3. list 3"
+
+   ". list 1
+
+. list 2
+. list 3\n")
+    (org-asciidoc-test-transcode-body
+   "1. list 1
+
+
+2. list 2
+3. list 3"
+
+   ". list 1
+
+
+// ^
+
+. list 2
+. list 3\n")
+  )
+
+(ert-deftest test-org-asciidoc/ordered-list-continuation ()
+  (org-asciidoc-test-transcode-body
+   "
+1. foo
+
+   this is foo
+
+2. bar
+
+   this is bar
+
+3. baz
+
+   this is baz
+"
+   ". foo
++
+this is foo
+
+. bar
++
+this is bar
+
+. baz
++
+this is baz
+"))
 
 (ert-deftest test-org-asciidoc/unordered-list-following-para ()
   (org-asciidoc-test-transcode-body

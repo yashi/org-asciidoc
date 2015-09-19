@@ -158,6 +158,9 @@ contextual information."
                          'item))
                 (zerop (org-element-property :post-blank prev)))
        "\n")
+     (when (and prev
+                (eq (org-element-type prev) 'plain-list))
+       "// ^\n\n")
      contents)))
 
 (defun org-asciidoc-item-list-depth (item)
@@ -179,13 +182,19 @@ contextual information."
 	 (depth (org-asciidoc-item-list-depth item))
 	 (bullet (cdr (assq type org-asciidoc-list-bullets))))
     (when bullet
-     (make-string depth bullet))))
+      (make-string depth bullet))))
 
 (defun org-asciidoc-item (item contents info)
   "Transcode an ITEM element into AsciiDoc format.
 CONTENTS holds the contents of the item.  INFO is a plist holding
 contextual information."
-  (format "%s %s" (org-asciidoc-list-item-delimiter item) contents))
+  (let ((lines (split-string (replace-regexp-in-string "\n\\'" "" contents) "\n")))
+    (format "%s %s"
+            (org-asciidoc-list-item-delimiter item)
+            (mapconcat (lambda (line)
+                         (if (string= "" line) "+" line))
+                       lines
+                       "\n"))))
 
 
 ;;; Example Block
