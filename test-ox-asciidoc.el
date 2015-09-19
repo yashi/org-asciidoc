@@ -275,6 +275,38 @@ this is baz
 ** and org allows any list to start right after it\n")
     )
 
+
+;;; Special Block
+(ert-deftest test-org-asciidoc/special-block-sidebar ()
+  (org-asciidoc-test-transcode-body
+   "#+BEGIN_sidebar
+This is a sidebar.
+#+END_sidebar"
+
+   "****
+This is a sidebar.
+****
+")
+  (org-asciidoc-test-transcode-body
+   "#+BEGIN_sidebar
+*This* /is/ =a= _sidebar_.
+#+END_sidebar"
+
+   "****
+*This* 'is' `a` [underline]#sidebar#.
+****
+")
+  (org-asciidoc-test-transcode-body
+   "#+BEGIN_sidebar
+This *is* a sidebar.
+#+END_sidebar"
+
+   "****
+This *is* a sidebar.
+****
+"))
+
+
 ;;; Example Blocks to Listing Blocks
 (ert-deftest test-org-asciidoc/example-block-to-listing-block ()
   (org-asciidoc-test-transcode-body
@@ -288,6 +320,15 @@ int main(void) {
 int main(void) {
     printf(\"Hello, World\");
 }
+....
+")
+  (org-asciidoc-test-transcode-body
+   "#+BEGIN_EXAMPLE
+This =is= an example block
+#+END_EXAMPLE"
+
+   "....
+This =is= an example block
 ....
 "))
 

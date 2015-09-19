@@ -78,7 +78,7 @@
     (quote-section . org-asciidoc-identity)
     (radio-target . org-asciidoc-identity)
     (section . org-asciidoc-identity)
-    (special-block . org-asciidoc-identity)
+    (special-block . org-asciidoc-special-block)
     (src-block . org-asciidoc-src-block)
     (statistics-cookie . org-asciidoc-identity)
     (strike-through . org-asciidoc-strike-through)
@@ -195,6 +195,20 @@ contextual information."
                          (if (string= "" line) "+" line))
                        lines
                        "\n"))))
+
+
+;;; Special Block
+(defun org-asciidoc-special-block (special-block contents info)
+  "Transcode a SPECIAL-BLOCK element into AsciiDoc format.
+CONTENTS holds the contents of the block.  INFO is a plist
+holding contextual information."
+  (let ((contents (or contents ""))
+        (type (org-element-property :type special-block)))
+    (cond
+     ((string= "sidebar" type)
+      (concat "****\n" contents "****"))
+     (t
+      contents))))
 
 
 ;;; Example Block
