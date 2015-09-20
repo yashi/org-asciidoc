@@ -308,6 +308,33 @@ This is a sidebar.
 ****
 "))
 
+(ert-deftest test-org-asciidoc/block-special-sidebar-with-caption ()
+  (org-asciidoc-test-transcode-body
+   "#+CAPTION: My Sidebar
+#+BEGIN_sidebar
+This *is* a sidebar.
+#+END_sidebar"
+
+   ".My Sidebar
+****
+This *is* a sidebar.
+****
+"))
+
+(ert-deftest test-org-asciidoc/block-special-sidebar-with-caption-multi ()
+  (org-asciidoc-test-transcode-body
+   "#+CAPTION: My Sidebar
+#+CAPTION: this is second line
+#+BEGIN_sidebar
+This *is* a sidebar.
+#+END_sidebar"
+
+   ".My Sidebar this is second line
+****
+This *is* a sidebar.
+****
+"))
+
 
 ;;; Source block
 (ert-deftest test-org-asciidoc/block-source ()
@@ -329,6 +356,20 @@ int main() {return 0;}
 #+END_SRC"
 
    "[source,C,linenums]
+----
+int main() {return 0;}
+----
+"))
+
+(ert-deftest test-org-asciidoc/block-source-with-caption ()
+  (org-asciidoc-test-transcode-body
+   "#+CAPTION: My Source
+#+BEGIN_SRC C
+int main() {return 0;}
+#+END_SRC"
+
+   "[source,C]
+.My Source
 ----
 int main() {return 0;}
 ----
@@ -356,6 +397,19 @@ This =is= an example block
 #+END_EXAMPLE"
 
    "....
+This =is= an example block
+....
+"))
+
+(ert-deftest test-org-asciidoc/block-example-with-caption ()
+  (org-asciidoc-test-transcode-body
+   "#+CAPTION: My Example block
+#+BEGIN_EXAMPLE
+This =is= an example block
+#+END_EXAMPLE"
+
+   ".My Example block
+....
 This =is= an example block
 ....
 "))

@@ -145,6 +145,13 @@ CONTENTS is the headline contents."
 	(concat "\n" delimiter " " title " " delimiter "\n" contents)))))
 
 
+;;; Block helper
+(defun org-asciidoc--get-block-title (block info)
+  (let ((caption (org-export-get-caption block)))
+    (when caption
+      (concat "." (org-export-data caption info) "\n"))))
+
+
 ;;; List
 (defun org-asciidoc-plain-list (plain-list contents info)
   "Transcode a PLAIN-LIST element into AsciiDoc format.
@@ -202,11 +209,14 @@ contextual information."
   "Transcode a SPECIAL-BLOCK element into AsciiDoc format.
 CONTENTS holds the contents of the block.  INFO is a plist
 holding contextual information."
-  (let ((contents (or contents ""))
-        (type (org-element-property :type special-block)))
+  (let* ((contents (or contents ""))
+         (type (org-element-property :type special-block))
+         (caption (org-asciidoc--get-block-title special-block info)))
     (cond
      ((string= "sidebar" type)
-      (concat "****\n" contents "****"))
+      (concat
+       (org-asciidoc--get-block-title special-block info)
+       "****\n" contents "****"))
      (t
       contents))))
 
@@ -217,7 +227,9 @@ holding contextual information."
 CONTENTS is nil.  INFO is a plist holding contextual
 information."
   (let ((value (org-element-property :value example-block)))
-    (concat "....\n" value "....")))
+    (concat
+     (org-asciidoc--get-block-title example-block info)
+     "....\n" value "....")))
 
 
 ;;; Source Block
@@ -229,7 +241,9 @@ information."
         (lang (org-element-property :language src-block))
         (linum (if (org-element-property :number-lines src-block)
                    ",linenums" "")))
-    (format "[source,%s%s]\n----\n%s----" lang linum value)))
+    (concat "[source," lang linum "]\n"
+            (org-asciidoc--get-block-title src-block info)
+            "----\n" value "----")))
 
 
 ;;; Fixed Width
