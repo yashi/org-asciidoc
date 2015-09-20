@@ -309,6 +309,32 @@ This is a sidebar.
 "))
 
 
+;;; Source block
+(ert-deftest test-org-asciidoc/block-source ()
+  (org-asciidoc-test-transcode-body
+   "#+BEGIN_SRC C
+int main() {return 0;}
+#+END_SRC"
+
+   "[source,C]
+----
+int main() {return 0;}
+----
+"))
+
+(ert-deftest test-org-asciidoc/block-source-with-linenumber ()
+  (org-asciidoc-test-transcode-body
+   "#+BEGIN_SRC C -n
+int main() {return 0;}
+#+END_SRC"
+
+   "[source,C,linenums]
+----
+int main() {return 0;}
+----
+"))
+
+
 ;;; Example Blocks to Listing Blocks
 (ert-deftest test-org-asciidoc/block-example-to-listing-block ()
   (org-asciidoc-test-transcode-body
@@ -404,44 +430,4 @@ multi-lines
 | Peter| 1234| 17
 | Anna| 4321| 25
 |====
-"))
-
-
-;;; Source block
-(ert-deftest test-org-asciidoc/source ()
-  (org-asciidoc-test-transcode-body
-   "#+BEGIN_SRC emacs-lisp
-  (defun org-xor (a b)
-    \"Exclusive or.\"
-    (if a (not b) b))
-#+END_SRC"
-
-   "[source,emacs-lisp]
-----
-(defun org-xor (a b)
-  \"Exclusive or.\"
-  (if a (not b) b))
-----
-"))
-
-(ert-deftest test-org-asciidoc/source-with-linenumber ()
-  (org-asciidoc-test-transcode-body
-   "#+BEGIN_SRC C -n
-#include <stdio.h>
-int main(int argc, char *argv[])
-{
-	printf(\"Hello, World\");
-	return 0;
-}
-#+END_SRC"
-
-   "[source,C,linenums]
-----
-#include <stdio.h>
-int main(int argc, char *argv[])
-{
-	printf(\"Hello, World\");
-	return 0;
-}
-----
 "))
