@@ -275,6 +275,16 @@ this is baz
 ** and org allows any list to start right after it\n")
     )
 
+
+;;; Footnote
+(ert-deftest test-org-asciidoc/footnote ()
+  (org-asciidoc-test-transcode-body
+   "This is body [fn:1: This is inline footnote]."
+
+   "This is body footnoteref:[1, This is inline footnote].
+"))
+
+
 ;;; Example Blocks to Listing Blocks
 (ert-deftest test-org-asciidoc/example-block-to-listing-block ()
   (org-asciidoc-test-transcode-body

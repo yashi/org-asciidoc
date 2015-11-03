@@ -55,7 +55,7 @@
     (example-block . org-asciidoc-example-block)
     (fixed-width . org-asciidoc-fixed-width)
     (footnote-definition . org-asciidoc-identity)
-    (footnote-reference . org-asciidoc-identity)
+    (footnote-reference . org-asciidoc-footnote-reference)
     (headline . org-asciidoc-headline)
     (horizontal-rule . org-asciidoc-identity)
     (inline-babel-call . org-asciidoc-identity)
@@ -241,6 +241,21 @@ information."
   "Transcode TEXT element into AsciiDoc format."
   (setq text (org-asciidoc-encode-plain-text text))
   text)
+
+
+;;; Footnote
+(defun org-asciidoc-footnote-reference (ref contents info)
+  "Transcode a REF element from Org to AsciiDoc.  REF is a list
+of footnote reference attributes.  CONTENTES is nil.  Info is a
+plist holding contextual information."
+  (let ((num (org-export-get-footnote-number ref info)))
+    (cond
+     ((org-export-footnote-first-reference-p ref info)
+      (format "footnoteref:[%s, %s]" num
+              (let ((def (org-export-get-footnote-definition ref info)))
+                (org-trim (org-export-data def info)))))
+     (t
+      (format "footnoteref:[%s]" num)))))
 
 
 ;;; Table
