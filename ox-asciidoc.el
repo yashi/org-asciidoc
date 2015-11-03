@@ -136,13 +136,16 @@ CONTENTS is its contents, as a string or nil.  INFO is ignored."
 (defun org-asciidoc-headline (headline contents info)
   "Transcode HEADLINE element into AsciiDoc format.
 CONTENTS is the headline contents."
-  (let* ((level (org-export-get-relative-level headline info))
-	 (title (org-export-data (org-element-property :title headline) info))
-	 (limit (plist-get info :headline-levels)))
-    (if (org-export-low-level-p headline info)
-	(concat (make-string (- level limit) ?*) " " title "\n" contents)
-      (let ((delimiter (make-string (1+ level) ?=)))
-	(concat "\n" delimiter " " title " " delimiter "\n" contents)))))
+  (if (org-element-property :footnote-section-p headline)
+      ;; ignore the whole section
+      nil
+    (let* ((level (org-export-get-relative-level headline info))
+           (title (org-export-data (org-element-property :title headline) info))
+           (limit (plist-get info :headline-levels)))
+      (if (org-export-low-level-p headline info)
+          (concat (make-string (- level limit) ?*) " " title "\n" contents)
+        (let ((delimiter (make-string (1+ level) ?=)))
+          (concat "\n" delimiter " " title " " delimiter "\n" contents))))))
 
 
 ;;; List

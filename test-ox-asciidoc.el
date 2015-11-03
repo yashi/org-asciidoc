@@ -143,6 +143,20 @@ John Smith
 *** 7th headline
 "))
 
+(ert-deftest test-org-asciidoc/headline ()
+  (org-asciidoc-test-transcode-body
+   "* 1st headline
+* 2nd headline
+* Footnotes
+* 3rd headline"
+
+   "
+== 1st headline ==
+
+== 2nd headline ==
+
+== 3rd headline ==
+"))
 
 ;;; List
 (ert-deftest test-org-asciidoc/unordered-list ()
