@@ -522,4 +522,20 @@ multi-lines
 | Peter| 1234| 17
 | Anna| 4321| 25
 |====
-"))
+")
+  (org-asciidoc-test-transcode-body
+   "#+ATTR_ASCIIDOC: :width 50 :pgwide t
+| Name  | Phone | Age |
+|-------+-------+-----|
+| Peter |  1234 |  17 |
+| Anna  |  4321 |  25 |
+"
+   "[width=\"50%\",options=\"header,pgwide\"]
+|====
+| Name| Phone| Age
+
+| Peter| 1234| 17
+| Anna| 4321| 25
+|====
+")
+  )
