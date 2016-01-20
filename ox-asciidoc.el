@@ -78,7 +78,7 @@
     (quote-section . org-asciidoc-identity)
     (radio-target . org-asciidoc-identity)
     (section . org-asciidoc-identity)
-    (special-block . org-asciidoc-identity)
+    (special-block . org-asciidoc-special-block)
     (src-block . org-asciidoc-src-block)
     (statistics-cookie . org-asciidoc-identity)
     (strike-through . org-asciidoc-strike-through)
@@ -148,6 +148,13 @@ CONTENTS is the headline contents."
           (concat "\n" delimiter " " title " " delimiter "\n" contents))))))
 
 
+;;; Block helper
+(defun org-asciidoc--get-block-title (block info)
+  (let ((caption (org-export-get-caption block)))
+    (when caption
+      (concat "." (org-export-data caption info) "\n"))))
+
+
 ;;; List
 (defun org-asciidoc-plain-list (plain-list contents info)
   "Transcode a PLAIN-LIST element into AsciiDoc format.
@@ -200,13 +207,32 @@ contextual information."
                        "\n"))))
 
 
+;;; Special Block
+(defun org-asciidoc-special-block (special-block contents info)
+  "Transcode a SPECIAL-BLOCK element into AsciiDoc format.
+CONTENTS holds the contents of the block.  INFO is a plist
+holding contextual information."
+  (let* ((contents (or contents ""))
+         (type (org-element-property :type special-block))
+         (caption (org-asciidoc--get-block-title special-block info)))
+    (cond
+     ((string= "sidebar" type)
+      (concat
+       (org-asciidoc--get-block-title special-block info)
+       "****\n" contents "****"))
+     (t
+      contents))))
+
+
 ;;; Example Block
 (defun org-asciidoc-example-block (example-block contents info)
   "Transcode a EXAMPLE-BLOCK element into AsciiDoc format.
 CONTENTS is nil.  INFO is a plist holding contextual
 information."
   (let ((value (org-element-property :value example-block)))
-    (concat "....\n" value "....")))
+    (concat
+     (org-asciidoc--get-block-title example-block info)
+     "....\n" value "....")))
 
 
 ;;; Source Block
@@ -218,7 +244,9 @@ information."
         (lang (org-element-property :language src-block))
         (linum (if (org-element-property :number-lines src-block)
                    ",linenums" "")))
-    (format "[source,%s%s]\n----\n%s----" lang linum value)))
+    (concat "[source," lang linum "]\n"
+            (org-asciidoc--get-block-title src-block info)
+            "----\n" value "----")))
 
 
 ;;; Fixed Width

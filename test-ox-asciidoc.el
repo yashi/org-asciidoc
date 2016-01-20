@@ -72,7 +72,7 @@ John Smith
 
 
 ;;; Inline Text Format
-(ert-deftest test-org-asciidoc/bold-to-strong ()
+(ert-deftest test-org-asciidoc/markup-bold-to-strong ()
   (org-asciidoc-test-transcode-body
    "*foo*"
    "*foo*\n")
@@ -80,7 +80,7 @@ John Smith
    "*foo ~ bar*"
    "*foo \\~ bar*\n"))
 
-(ert-deftest test-org-asciidoc/italic-to-emphasized ()
+(ert-deftest test-org-asciidoc/markup-italic-to-emphasized ()
   (org-asciidoc-test-transcode-body
    "/foo/"
    "'foo'\n")
@@ -88,7 +88,7 @@ John Smith
    "/foo ~ bar/"
    "'foo \\~ bar'\n"))
 
-(ert-deftest test-org-asciidoc/underlined-to-underline ()
+(ert-deftest test-org-asciidoc/markup-underlined-to-underline ()
   (org-asciidoc-test-transcode-body
    "_foo_"
    "[underline]#foo#\n")
@@ -96,7 +96,7 @@ John Smith
    "_foo ~ bar_"
    "[underline]#foo \\~ bar#\n"))
 
-(ert-deftest test-org-asciidoc/code-to-monospaced ()
+(ert-deftest test-org-asciidoc/markup-code-to-monospaced ()
   (org-asciidoc-test-transcode-body
    "=foo="
    "`foo`\n")
@@ -104,7 +104,7 @@ John Smith
    "=foo ~ bar="
    "`foo \\~ bar`\n"))
 
-(ert-deftest test-org-asciidoc/verbatim-to-monospaced ()
+(ert-deftest test-org-asciidoc/markup-verbatim-to-monospaced ()
   (org-asciidoc-test-transcode-body
    "~foo~"
    "`foo`\n")
@@ -112,7 +112,7 @@ John Smith
    "~foo ~ bar~"
    "`foo \\~ bar`\n"))
 
-(ert-deftest test-org-asciidoc/strikethrough-to-linethrough ()
+(ert-deftest test-org-asciidoc/markup-strikethrough-to-linethrough ()
   (org-asciidoc-test-transcode-body
    "+foo+"
    "[line-through]#foo#\n")
@@ -159,7 +159,7 @@ John Smith
 "))
 
 ;;; List
-(ert-deftest test-org-asciidoc/unordered-list ()
+(ert-deftest test-org-asciidoc/list-unordered ()
   (org-asciidoc-test-transcode-body
    "- list\n"
    "* list\n")
@@ -182,7 +182,7 @@ John Smith
 **** list
 ***** list\n"))
 
-(ert-deftest test-org-asciidoc/ordered-list ()
+(ert-deftest test-org-asciidoc/list-ordered ()
   (org-asciidoc-test-transcode-body
    "1. list 1
 2. list 2
@@ -235,7 +235,7 @@ John Smith
 . list 3\n")
   )
 
-(ert-deftest test-org-asciidoc/ordered-list-continuation ()
+(ert-deftest test-org-asciidoc/list-ordered-continuation ()
   (org-asciidoc-test-transcode-body
    "
 1. foo
@@ -263,7 +263,7 @@ this is bar
 this is baz
 "))
 
-(ert-deftest test-org-asciidoc/unordered-list-following-para ()
+(ert-deftest test-org-asciidoc/list-unordered-following-para ()
   (org-asciidoc-test-transcode-body
    "this is a paragraph.
 - and org allows any list to start right after para"
@@ -299,8 +299,108 @@ this is baz
 "))
 
 
+;;; Special Block
+(ert-deftest test-org-asciidoc/block-special-sidebar ()
+  (org-asciidoc-test-transcode-body
+   "#+BEGIN_sidebar
+This is a sidebar.
+#+END_sidebar"
+
+   "****
+This is a sidebar.
+****
+"))
+
+(ert-deftest test-org-asciidoc/block-special-sidebar-with-markup ()
+  (org-asciidoc-test-transcode-body
+   "#+BEGIN_sidebar
+*This* /is/ =a= _sidebar_.
+#+END_sidebar"
+
+   "****
+*This* 'is' `a` [underline]#sidebar#.
+****
+"))
+
+(ert-deftest test-org-asciidoc/block-special-sidebar-empty ()
+  (org-asciidoc-test-transcode-body
+   "#+BEGIN_sidebar
+#+END_sidebar"
+
+   "****
+****
+"))
+
+(ert-deftest test-org-asciidoc/block-special-sidebar-with-caption ()
+  (org-asciidoc-test-transcode-body
+   "#+CAPTION: My Sidebar
+#+BEGIN_sidebar
+This *is* a sidebar.
+#+END_sidebar"
+
+   ".My Sidebar
+****
+This *is* a sidebar.
+****
+"))
+
+(ert-deftest test-org-asciidoc/block-special-sidebar-with-caption-multi ()
+  (org-asciidoc-test-transcode-body
+   "#+CAPTION: My Sidebar
+#+CAPTION: this is second line
+#+BEGIN_sidebar
+This *is* a sidebar.
+#+END_sidebar"
+
+   ".My Sidebar this is second line
+****
+This *is* a sidebar.
+****
+"))
+
+
+;;; Source block
+(ert-deftest test-org-asciidoc/block-source ()
+  (org-asciidoc-test-transcode-body
+   "#+BEGIN_SRC C
+int main() {return 0;}
+#+END_SRC"
+
+   "[source,C]
+----
+int main() {return 0;}
+----
+"))
+
+(ert-deftest test-org-asciidoc/block-source-with-linenumber ()
+  (org-asciidoc-test-transcode-body
+   "#+BEGIN_SRC C -n
+int main() {return 0;}
+#+END_SRC"
+
+   "[source,C,linenums]
+----
+int main() {return 0;}
+----
+"))
+
+(ert-deftest test-org-asciidoc/block-source-with-caption ()
+  (org-asciidoc-test-transcode-body
+   "#+CAPTION: My Source
+#+BEGIN_SRC C
+int main() {return 0;}
+#+END_SRC"
+
+   "[source,C]
+.My Source
+----
+int main() {return 0;}
+----
+"))
+
+
 ;;; Example Blocks to Listing Blocks
-(ert-deftest test-org-asciidoc/example-block-to-listing-block ()
+(ert-deftest test-org-asciidoc/block-example-to-listing-block ()
   (org-asciidoc-test-transcode-body
    "#+BEGIN_EXAMPLE
 int main(void) {
@@ -312,6 +412,28 @@ int main(void) {
 int main(void) {
     printf(\"Hello, World\");
 }
+....
+")
+  (org-asciidoc-test-transcode-body
+   "#+BEGIN_EXAMPLE
+This =is= an example block
+#+END_EXAMPLE"
+
+   "....
+This =is= an example block
+....
+"))
+
+(ert-deftest test-org-asciidoc/block-example-with-caption ()
+  (org-asciidoc-test-transcode-body
+   "#+CAPTION: My Example block
+#+BEGIN_EXAMPLE
+This =is= an example block
+#+END_EXAMPLE"
+
+   ".My Example block
+....
+This =is= an example block
 ....
 "))
 
@@ -332,6 +454,7 @@ how about
 multi-lines
 ....
 "))
+
 
 ;;; Plain Text
 (ert-deftest test-org-asciidoc/plain-text ()
@@ -399,44 +522,4 @@ multi-lines
 | Peter| 1234| 17
 | Anna| 4321| 25
 |====
-"))
-
-
-;;; Source block
-(ert-deftest test-org-asciidoc/source ()
-  (org-asciidoc-test-transcode-body
-   "#+BEGIN_SRC emacs-lisp
-  (defun org-xor (a b)
-    \"Exclusive or.\"
-    (if a (not b) b))
-#+END_SRC"
-
-   "[source,emacs-lisp]
-----
-(defun org-xor (a b)
-  \"Exclusive or.\"
-  (if a (not b) b))
-----
-"))
-
-(ert-deftest test-org-asciidoc/source-with-linenumber ()
-  (org-asciidoc-test-transcode-body
-   "#+BEGIN_SRC C -n
-#include <stdio.h>
-int main(int argc, char *argv[])
-{
-	printf(\"Hello, World\");
-	return 0;
-}
-#+END_SRC"
-
-   "[source,C,linenums]
-----
-#include <stdio.h>
-int main(int argc, char *argv[])
-{
-	printf(\"Hello, World\");
-	return 0;
-}
-----
 "))
