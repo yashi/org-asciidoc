@@ -266,10 +266,12 @@ plist holding contextual information."
 
 (defun org-asciidoc-table (table contents info)
   "Transcode TABLE element into AsciiDoc format."
-  (let ((has-header (org-export-table-has-header-p table info)))
+  (let ((has-header (org-export-table-has-header-p table info))
+        (pgwide (org-export-read-attribute :attr_asciidoc table :pgwide)))
     (concat (format "[width=\"%d%%\",options=\"%s\"]\n"
 		    org-asciidoc-table-width-in-percent
-		    (if has-header "header"))
+                    (concat (and has-header "header")
+                            (and pgwide ",pgwide")))
 	    "|====\n"
 	    contents
 	    "|====")))
