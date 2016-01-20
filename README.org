@@ -11,3 +11,16 @@ An Org Mode Exporter Backend For AsciiDoc
        (require 'ox-asciidoc)
      #+END_SRC
   4) open a .org file and run =org-asciidoc-export-as-asciidoc=
+
+* AsciiDoc specific attributes
+
+AsciiDoc backend understands the following attributes in a
+=ATTR_ASCIIDOC= line.
+
+** Tables
+
+- width :: a percentage value to specify the table width with in the
+     current column.  Valid value: 1...99
+
+- pgwdth :: a boolean value to specify the table should be column
+     width or page width in multi-column setup. Valid value: t or nil
