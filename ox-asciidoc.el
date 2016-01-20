@@ -55,7 +55,7 @@
     (example-block . org-asciidoc-example-block)
     (fixed-width . org-asciidoc-fixed-width)
     (footnote-definition . org-asciidoc-identity)
-    (footnote-reference . org-asciidoc-identity)
+    (footnote-reference . org-asciidoc-footnote-reference)
     (headline . org-asciidoc-headline)
     (horizontal-rule . org-asciidoc-identity)
     (inline-babel-call . org-asciidoc-identity)
@@ -136,13 +136,16 @@ CONTENTS is its contents, as a string or nil.  INFO is ignored."
 (defun org-asciidoc-headline (headline contents info)
   "Transcode HEADLINE element into AsciiDoc format.
 CONTENTS is the headline contents."
-  (let* ((level (org-export-get-relative-level headline info))
-	 (title (org-export-data (org-element-property :title headline) info))
-	 (limit (plist-get info :headline-levels)))
-    (if (org-export-low-level-p headline info)
-	(concat (make-string (- level limit) ?*) " " title "\n" contents)
-      (let ((delimiter (make-string (1+ level) ?=)))
-	(concat "\n" delimiter " " title " " delimiter "\n" contents)))))
+  (if (org-element-property :footnote-section-p headline)
+      ;; ignore the whole section
+      nil
+    (let* ((level (org-export-get-relative-level headline info))
+           (title (org-export-data (org-element-property :title headline) info))
+           (limit (plist-get info :headline-levels)))
+      (if (org-export-low-level-p headline info)
+          (concat (make-string (- level limit) ?*) " " title "\n" contents)
+        (let ((delimiter (make-string (1+ level) ?=)))
+          (concat "\n" delimiter " " title " " delimiter "\n" contents))))))
 
 
 ;;; List
@@ -241,6 +244,21 @@ information."
   "Transcode TEXT element into AsciiDoc format."
   (setq text (org-asciidoc-encode-plain-text text))
   text)
+
+
+;;; Footnote
+(defun org-asciidoc-footnote-reference (ref contents info)
+  "Transcode a REF element from Org to AsciiDoc.  REF is a list
+of footnote reference attributes.  CONTENTES is nil.  Info is a
+plist holding contextual information."
+  (let ((num (org-export-get-footnote-number ref info)))
+    (cond
+     ((org-export-footnote-first-reference-p ref info)
+      (format "footnoteref:[%s, %s]" num
+              (let ((def (org-export-get-footnote-definition ref info)))
+                (org-trim (org-export-data def info)))))
+     (t
+      (format "footnoteref:[%s]" num)))))
 
 
 ;;; Table

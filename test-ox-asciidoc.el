@@ -143,6 +143,20 @@ John Smith
 *** 7th headline
 "))
 
+(ert-deftest test-org-asciidoc/headline ()
+  (org-asciidoc-test-transcode-body
+   "* 1st headline
+* 2nd headline
+* Footnotes
+* 3rd headline"
+
+   "
+== 1st headline ==
+
+== 2nd headline ==
+
+== 3rd headline ==
+"))
 
 ;;; List
 (ert-deftest test-org-asciidoc/unordered-list ()
@@ -274,6 +288,16 @@ this is baz
 * and this is a list
 ** and org allows any list to start right after it\n")
     )
+
+
+;;; Footnote
+(ert-deftest test-org-asciidoc/footnote ()
+  (org-asciidoc-test-transcode-body
+   "This is body [fn:1: This is inline footnote]."
+
+   "This is body footnoteref:[1, This is inline footnote].
+"))
+
 
 ;;; Example Blocks to Listing Blocks
 (ert-deftest test-org-asciidoc/example-block-to-listing-block ()
