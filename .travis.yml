@@ -5,6 +5,16 @@ language: c
 git:
   depth: 1
 
+matrix:
+  include:
+    - os: linux
+      sudo: required
+      dist: trusty
+      env:
+        - EMACS=emacs-snapshot
+        - ORG_BRANCH=master
+        - PPA=ubuntu-elisp/ppa
+
 env:
   global:
     - ORG_REPO=git://orgmode.org/org-mode.git
