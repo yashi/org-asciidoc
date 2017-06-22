@@ -65,6 +65,28 @@ John Smith
 ")
   )
 
+(ert-deftest test-org-asciidoc/title-with-docinfo ()
+  (org-asciidoc-test-transcode-with-template
+   "#+Title: This is the title
+#+AUTHOR: John Smith
+#+OPTIONS: asciidoc-docinfo:nil"
+
+   "= This is the title =
+John Smith
+
+")
+  (org-asciidoc-test-transcode-with-template
+   "#+Title: This is the title
+#+AUTHOR: John Smith
+#+OPTIONS: asciidoc-docinfo:t"
+
+   "= This is the title =
+John Smith
+:docinfo:
+
+")
+  )
+
 (defun org-asciidoc-test-transcode-body (str1 str2)
   (should (equal (org-test-with-temp-text str1
 		   (org-export-as 'asciidoc nil nil t))

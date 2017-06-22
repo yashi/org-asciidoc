@@ -93,7 +93,9 @@
     (underline . org-asciidoc-underline)
     (verbatim . org-asciidoc-verbatim)
     (verse-block . org-asciidoc-identity))
-  :options-alist '((:headline-levels nil nil 4 t))
+  :options-alist
+  '((:headline-levels nil nil 4 t)
+    (:asciidoc-docinfo nil "asciidoc-docinfo" org-asciidoc-docinfo))
   :menu-entry
   '(?a "Export to Asciidoc"
        ((?a "As Asciidoc buffer"
@@ -105,6 +107,10 @@
 	      (if a (org-asciidoc-export-to-asciidoc t s v)
 		(org-open-file (org-asciidoc-export-to-asciidoc nil s v))))))))
 
+(defcustom org-asciidoc-docinfo nil
+  "Whether to use ':docinfo:'"
+  :group 'org-export-asciidoc
+  :type 'boolean)
 
 (defun org-asciidoc-identity (blob contents info)
   "Transcode BLOB element or object back into Org syntax.
@@ -370,7 +376,8 @@ be converted with AsciiDoc's image macro."
   (let ((title (org-asciidoc-info-get info :title))
 	(author (org-asciidoc-info-get-with info :author))
 	(email (org-asciidoc-info-get-with info :email))
-        (date (org-asciidoc-info-get-with info :date)))
+        (date (org-asciidoc-info-get-with info :date))
+        (docinfo (plist-get info :asciidoc-docinfo)))
     (concat
      ;; The first line, title
      (format "= %s =\n" title)
@@ -386,6 +393,9 @@ be converted with AsciiDoc's image macro."
      ;;   (concat date "\n"))
      (when (org-string-nw-p date)
        (concat date "\n"))
+     ;; Add docinfo line if needed
+     (when docinfo
+       ":docinfo:\n")
      ;; add another new line for preamble
      "\n")))
 
