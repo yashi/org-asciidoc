@@ -300,14 +300,21 @@ plist holding contextual information."
 
 (defun org-asciidoc-table (table contents info)
   "Transcode TABLE element into AsciiDoc format."
-  (let ((has-header (org-export-table-has-header-p table info))
-        (width (org-export-read-attribute :attr_asciidoc table :width))
-        (pgwide (org-export-read-attribute :attr_asciidoc table :pgwide)))
-    (concat (format "[width=\"%d%%\",options=\"%s\"]\n"
+  (let* ((width (org-export-read-attribute :attr_asciidoc table :width))
+         (cols (org-export-read-attribute :attr_asciidoc table :cols))
+         (header (and (org-export-table-has-header-p table info) "header"))
+         (pgwide (and (org-export-read-attribute :attr_asciidoc table :pgwide) "pgwide"))
+         (options (remq nil (list header pgwide))))
+    (concat (format "[width=\"%d%%\""
 		    (or (and width (string-to-number width))
-                        org-asciidoc-table-width-in-percent)
-                    (concat (and has-header "header")
-                            (and pgwide ",pgwide")))
+                        org-asciidoc-table-width-in-percent))
+            (and cols
+              (concat ",cols=\"" cols "\""))
+            (and options
+             (concat ",options=\""
+                     (string-join options ",")
+                     "\""))
+            "]\n"
 	    "|====\n"
 	    contents
 	    "|====")))
