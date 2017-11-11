@@ -312,7 +312,7 @@ plist holding contextual information."
               (concat ",cols=\"" cols "\""))
             (and options
              (concat ",options=\""
-                     (string-join options ",")
+                     (mapconcat 'identity options ",")
                      "\""))
             "]\n"
 	    "|====\n"
