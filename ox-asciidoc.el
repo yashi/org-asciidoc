@@ -259,7 +259,7 @@ information."
 (defun org-asciidoc-fixed-width (fixed-width contents info)
   (let ((value (org-element-property :value fixed-width)))
     (and value
-         (concat "....\n" value "...."))))
+         (concat "....\n" value "\n...."))))
 
 
 ;;; Plain Text
