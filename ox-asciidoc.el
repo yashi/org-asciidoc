@@ -196,9 +196,11 @@ contextual information."
   (let* ((plain-list (org-export-get-parent item))
 	 (type (org-element-property :type plain-list))
 	 (depth (org-asciidoc-item-list-depth item))
+         (tag (let ((tag (org-element-property :tag item)))
+                (and tag (org-export-data tag info))))
 	 (bullet (cdr (assq type org-asciidoc-list-bullets))))
-    (when bullet
-      (make-string depth bullet))))
+    (cond (bullet (make-string depth bullet))
+          (tag (format "%s::" tag)))))
 
 (defun org-asciidoc-item (item contents info)
   "Transcode an ITEM element into AsciiDoc format.

@@ -311,6 +311,18 @@ this is baz
 ** and org allows any list to start right after it\n")
     )
 
+(ert-deftest test-org-asciidoc/list-description ()
+  (org-asciidoc-test-transcode-body
+   "- term :: This is a description line."
+   "term:: This is a description line.
+")
+  (org-asciidoc-test-transcode-body
+   "- term1 :: This is the first description line.
+- term2 :: This is the second description line."
+   "term1:: This is the first description line.
+term2:: This is the second description line.
+"))
+
 
 ;;; Footnote
 (ert-deftest test-org-asciidoc/footnote ()
