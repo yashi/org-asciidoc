@@ -21,8 +21,6 @@ env:
     - ORG_DIR=org-mode
 
   matrix:
-    - EMACS=emacs24 ORG_BRANCH=maint PPA=cassou/emacs
-    - EMACS=emacs24 ORG_BRANCH=master PPA=cassou/emacs
     - EMACS=emacs-snapshot ORG_BRANCH=maint PPA=ubuntu-elisp/ppa
     - EMACS=emacs-snapshot ORG_BRANCH=master PPA=ubuntu-elisp/ppa
 
