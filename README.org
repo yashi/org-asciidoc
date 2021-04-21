@@ -1,3 +1,5 @@
+[[https://melpa.org/#/ox-asciidoc][file:https://melpa.org/packages/ox-asciidoc-badge.svg]]
+
 * org-asciidoc
 
 An Org Mode Exporter Backend For AsciiDoc
