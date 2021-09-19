@@ -127,7 +127,7 @@ CONTENTS is its contents, as a string or nil.  INFO is ignored."
   (concat "`" (org-asciidoc-encode-plain-text (org-element-property :value code)) "`"))
 
 (defun org-asciidoc-italic (italic contents info)
-  (concat "'" contents "'"))
+  (concat "_" contents "_"))
 
 (defun org-asciidoc-strike-through (strike-through contents info)
   (concat "[line-through]#" contents "#"))

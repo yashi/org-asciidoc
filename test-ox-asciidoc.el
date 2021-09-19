@@ -105,10 +105,10 @@ John Smith
 (ert-deftest test-org-asciidoc/markup-italic-to-emphasized ()
   (org-asciidoc-test-transcode-body
    "/foo/"
-   "'foo'\n")
+   "_foo_\n")
   (org-asciidoc-test-transcode-body
    "/foo ~ bar/"
-   "'foo \\~ bar'\n"))
+   "_foo \\~ bar_\n"))
 
 (ert-deftest test-org-asciidoc/markup-underlined-to-underline ()
   (org-asciidoc-test-transcode-body
@@ -352,7 +352,7 @@ This is a sidebar.
 #+END_sidebar"
 
    "****
-*This* 'is' `a` [underline]#sidebar#.
+*This* _is_ `a` [underline]#sidebar#.
 ****
 "))
 
