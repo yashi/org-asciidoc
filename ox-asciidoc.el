@@ -34,6 +34,7 @@
 (require 'ox)
 (require 'cl-lib)
 (require 'ox-html)
+(require 'ox-publish)
 
 (defgroup org-export-asciidoc nil
   "Options for exporting Org mode files to Asciidoc."
@@ -470,6 +471,17 @@ Return output file name."
   (interactive)
   (let ((outfile (org-export-output-file-name ".txt" subtreep)))
     (org-export-to-file 'asciidoc outfile async subtreep visible-only)))
+
+;;;###autoload
+(defun org-asciidoc-publish-to-asciidoc (plist filename pub-dir)
+  "Publish an org file to Asciidoc.
+
+FILENAME is the filename of the Org file to be published.  PLIST
+is the property list for the given project.  PUB-DIR is the
+publishing directory.
+
+Return output file name."
+  (org-publish-org-to 'asciidoc filename ".txt" plist pub-dir))
 
 (provide 'ox-asciidoc)
 

@@ -26,3 +26,17 @@ AsciiDoc backend understands the following attributes in a
 
 - pgwdth :: a boolean value to specify the table should be column
      width or page width in multi-column setup. Valid value: t or nil
+
+
+* org-publish
+
+  If you want to use `org-publish` with ox-asciidoc, setup your
+  `org-publish-project-alist` like this:
+
+  #+begin_src lisp
+    (setq org-publish-project-alist
+	  '(("my-proj"
+	     :base-directory "/tmp/my-dir"
+	     :publishing-directory "/tmp/pub-dir"
+	     :publishing-function org-asciidoc-publish-to-asciidoc)))
+  #+end_src
