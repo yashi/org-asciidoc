@@ -1,4 +1,6 @@
 [[https://melpa.org/#/ox-asciidoc][file:https://melpa.org/packages/ox-asciidoc-badge.svg]]
+[[https://github.com/yashi/org-asciidoc/actions][file:https://github.com/yashi/org-asciidoc/actions/workflows/tests.yml/badge.svg]]
+
 
 * org-asciidoc
 

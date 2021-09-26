@@ -1,0 +1,34 @@
+name: Tests
+on: [push, pull_request]
+jobs:
+  run-test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        emacs:
+          - 25.3
+          - 26.3
+          - 27.2
+          - snapshot
+        orgmode:
+          - main
+          - bugfix
+    steps:
+      - uses: purcell/setup-emacs@master
+        with:
+          version: ${{ matrix.emacs }}
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Checkout Org-Mode
+        run: git clone --depth=1 --branch ${{matrix.orgmode}} git://git.savannah.gnu.org/emacs/org-mode.git ../org-mode
+
+      - name: Generate Autoload
+        run: |
+          echo "autoloads:" > local.mk
+          make
+        working-directory: ../org-mode
+
+      - run: make test
