@@ -432,6 +432,66 @@ int main() {return 0;}
 ----
 "))
 
+(ert-deftest test-org-asciidoc/block-source-with-attr-asciidoctor-diagram ()
+  (org-asciidoc-test-transcode-body
+   "#+ATTR_ASCIIDOC: :asciidoctor-diagram t
+#+BEGIN_SRC ditaa :file images/hello-world.png :exports diagram code
++--------------+
+| Hello World! |
++--------------+
+#+END_SRC"
+
+   "[ditaa, target=images/hello-world, format=png]
+----
++--------------+
+| Hello World! |
++--------------+
+----
+")
+  (org-asciidoc-test-transcode-body
+   "#+ATTR_ASCIIDOC: :asciidoctor-diagram t
+#+BEGIN_SRC plantuml :file images/basic-seq.svg :exports diagram
+@startuml
+Alice -> Bob: Authentication Request
+Bob --> Alice: Authentication Response
+
+Alice -> Bob: Another authentication Request
+Alice <-- Bob: Another authentication Response
+@enduml
+#+END_SRC"
+
+   "[plantuml, target=images/basic-seq, format=svg]
+----
+@startuml
+Alice -> Bob: Authentication Request
+Bob --> Alice: Authentication Response
+
+Alice -> Bob: Another authentication Request
+Alice <-- Bob: Another authentication Response
+@enduml
+----
+"))
+
+(ert-deftest test-org-asciidoc/block-source-with-attr-asciidoctor-diagram-failure ()
+  "with :export code, :file parameter is not passed to exporter
+and failed.  Give non-standard param `diagram' so that :file is
+preserved."
+    :expected-result :failed
+  (org-asciidoc-test-transcode-body
+   "#+ATTR_ASCIIDOC: :asciidoctor-diagram t
+#+BEGIN_SRC ditaa :file images/hello-world.png :exports code
++--------------+
+| Hello World! |
++--------------+
+#+END_SRC"
+
+   "[ditaa, target=images/hello-world, format=png]
+----
++--------------+
+| Hello World! |
++--------------+
+----
+"))
 
 ;;; Example Blocks to Listing Blocks
 (ert-deftest test-org-asciidoc/block-example-to-listing-block ()
