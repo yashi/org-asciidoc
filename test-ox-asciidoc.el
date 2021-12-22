@@ -43,7 +43,7 @@
 		   (org-export-as 'asciidoc))
 		 str2)))
 
-(ert-deftest test-rog-asciidoc/title ()
+(ert-deftest test-org-asciidoc/title ()
   (org-asciidoc-test-transcode-with-template
    "#+AUTHOR: John Smith
 #+Title: This is the title"
