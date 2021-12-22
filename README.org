@@ -42,12 +42,28 @@ AsciiDoc backend understands the following attributes in a
 
 ** Tables
 
-- width :: a percentage value to specify the table width with in the
-     current column.  Valid value: 1...99
+- :width :: a percentage value to specify the table width with in the
+  current column.  Valid values: 1...99.
 
-- pgwdth :: a boolean value to specify the table should be column
-     width or page width in multi-column setup. Valid value: t or nil
+  e.g)
+  #+begin_src org
+    ,#+ATTR_ASCIIDOC: :width 50
+    | Name  | Phone | Age |
+    | Peter |  1234 |  17 |
+    | Anna  |  4321 |  25 |
+  #+end_src
 
+- :pgwide :: a boolean value to specify the table should be column
+  width or full page width in multi-column setup. Valid values: ~t~ or
+  ~nil~.
+
+  e.g)
+  #+begin_src org
+    ,#+ATTR_ASCIIDOC: :pgwide t
+    | Name  | Phone | Age |
+    | Peter |  1234 |  17 |
+    | Anna  |  4321 |  25 |
+  #+end_src
 
 * org-publish
 
