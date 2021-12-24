@@ -252,10 +252,21 @@ information."
   (let ((value (org-element-property :value src-block))
         (lang (org-element-property :language src-block))
         (linum (if (org-element-property :number-lines src-block)
-                   ",linenums" "")))
-    (concat "[source," lang linum "]\n"
-            (org-asciidoc--get-block-title src-block info)
-            "----\n" value "----")))
+                   ",linenums" ""))
+        (params (nth 2 (org-babel-get-src-block-info)))
+        (attr (org-export-read-attribute :attr_asciidoc src-block)))
+    (concat
+     (if (plist-get attr :asciidoctor-diagram)
+         (if (not (assq :file params))
+             (user-error
+              "No :file header argument given or a wrong value for :exports is set. Make sure to set both :file header argument and :exports diagram")
+           (let* ((file (cdr (assq :file params)))
+                  (base (file-name-sans-extension file))
+                  (ext (file-name-extension file)))
+             (concat "[" lang ", target=" base ", format=" ext "]\n")))
+       (concat "[source," lang linum "]\n"))
+     (org-asciidoc--get-block-title src-block info)
+     "----\n" value "----")))
 
 
 ;;; Fixed Width

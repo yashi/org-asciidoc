@@ -4,7 +4,7 @@
 
 * org-asciidoc
 
-An Org Mode Exporter Backend For AsciiDoc
+An Org Mode Exporter Backend For AsciiDoc and Asciidoctor
 
 * Setup
   1) Make sure you have org-mode v8.0 or later
@@ -21,14 +21,49 @@ An Org Mode Exporter Backend For AsciiDoc
 AsciiDoc backend understands the following attributes in a
 =ATTR_ASCIIDOC= line.
 
+** Source Code Blocks
+
+   - :asciidoctor-diagram :: Export a source code block as an
+     [[https://docs.asciidoctor.org/diagram-extension/latest/][Asciidoctor Diagram]]. Set it as ~t~ to generate a listing block
+     for an asciidoctor diagram.
+
+     Make sure to set ~:exports~ to something non-standard, ~diagram~.
+     This allows us to get ~:file~ parameter in the exporter.
+
+     e.g)
+     #+begin_src org
+       ,#+ATTR_ASCIIDOC: :asciidoctor-diagram t
+       ,#+BEGIN_SRC ditaa :file images/hello-world.png :exports diagram
+       +--------------+
+       | Hello World! |
+       +--------------+
+       ,#+END_SRC
+     #+end_src
+
 ** Tables
 
-- width :: a percentage value to specify the table width with in the
-     current column.  Valid value: 1...99
+- :width :: a percentage value to specify the table width with in the
+  current column.  Valid values: 1...99.
 
-- pgwdth :: a boolean value to specify the table should be column
-     width or page width in multi-column setup. Valid value: t or nil
+  e.g)
+  #+begin_src org
+    ,#+ATTR_ASCIIDOC: :width 50
+    | Name  | Phone | Age |
+    | Peter |  1234 |  17 |
+    | Anna  |  4321 |  25 |
+  #+end_src
 
+- :pgwide :: a boolean value to specify the table should be column
+  width or full page width in multi-column setup. Valid values: ~t~ or
+  ~nil~.
+
+  e.g)
+  #+begin_src org
+    ,#+ATTR_ASCIIDOC: :pgwide t
+    | Name  | Phone | Age |
+    | Peter |  1234 |  17 |
+    | Anna  |  4321 |  25 |
+  #+end_src
 
 * org-publish
 
