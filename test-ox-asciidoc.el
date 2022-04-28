@@ -165,7 +165,7 @@ John Smith
 *** 7th headline
 "))
 
-(ert-deftest test-org-asciidoc/headline ()
+(ert-deftest test-org-asciidoc/headline-no-footnotes ()
   (org-asciidoc-test-transcode-body
    "* 1st headline
 * 2nd headline
