@@ -193,7 +193,7 @@ contextual information."
   '((unordered . ?*)
     (ordered . ?.)))
 
-(defun org-asciidoc-list-item-delimiter (item)
+(defun org-asciidoc-list-item-delimiter (item info)
   (let* ((plain-list (org-export-get-parent item))
 	 (type (org-element-property :type plain-list))
 	 (depth (org-asciidoc-item-list-depth item))
@@ -209,7 +209,7 @@ CONTENTS holds the contents of the item.  INFO is a plist holding
 contextual information."
   (let ((lines (split-string (replace-regexp-in-string "\n\\'" "" contents) "\n")))
     (format "%s %s"
-            (org-asciidoc-list-item-delimiter item)
+            (org-asciidoc-list-item-delimiter item info)
             (mapconcat (lambda (line)
                          (if (string= "" line) "+" line))
                        lines
