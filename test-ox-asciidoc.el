@@ -591,6 +591,54 @@ This =is= an example block
 "))
 
 
+;;; Quoted Blocks
+(ert-deftest test-org-asciidoc/block-quote ()
+  (org-asciidoc-test-transcode-body
+   "#+begin_quote
+The quick brown fox jumps over the lazy dog.
+#+end_quote"
+
+   "[quote]
+____
+The quick brown fox jumps over the lazy dog.
+____
+")
+  (org-asciidoc-test-transcode-body
+   "#+begin_quote
+This =is= an example block
+#+end_quote"
+
+   "[quote]
+____
+This `is` an example block
+____
+"))
+
+
+;;; Verse Blocks
+(ert-deftest test-org-asciidoc/verse-quote ()
+  (org-asciidoc-test-transcode-body
+   "#+begin_verse
+The quick brown fox jumps over the lazy dog.
+#+end_verse"
+
+   "[verse]
+____
+The quick brown fox jumps over the lazy dog.
+____
+")
+  (org-asciidoc-test-transcode-body
+   "#+begin_verse
+This =is= an example block
+#+end_verse"
+
+   "[verse]
+____
+This `is` an example block
+____
+"))
+
+
 ;;; Fixed width
 (ert-deftest test-org-asciidoc/fixed-width ()
   (org-asciidoc-test-transcode-body

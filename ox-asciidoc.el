@@ -75,7 +75,7 @@
     (plain-text . org-asciidoc-plain-text)
     (planning . org-asciidoc-identity)
     (property-drawer . (lambda (&rest args) ""))
-    (quote-block . org-asciidoc-identity)
+    (quote-block . org-asciidoc-quote-block)
     (quote-section . org-asciidoc-identity)
     (radio-target . org-asciidoc-identity)
     (section . org-asciidoc-identity)
@@ -93,7 +93,7 @@
     (timestamp . org-asciidoc-identity)
     (underline . org-asciidoc-underline)
     (verbatim . org-asciidoc-verbatim)
-    (verse-block . org-asciidoc-identity))
+    (verse-block . org-asciidoc-verse-block))
   :options-alist
   '((:headline-levels nil nil 4 t)
     (:asciidoc-docinfo nil "asciidoc-docinfo" org-asciidoc-docinfo)
@@ -352,6 +352,26 @@ information."
        (concat "[source," lang linum "]\n"))
      (org-asciidoc--get-block-title src-block info)
      "----\n" value "----")))
+
+
+;;; Quoted Block
+(defun org-asciidoc-quote-block (quoted-block contents info)
+  "Transcode QUOTED-TEXT element into AsciiDoc format. QUOTED-BLOCK
+is nil. CONTENTS is the content of the block.  INFO is a plist
+holding contextual information."
+  (concat "[quote]\n____\n"
+          contents
+          "____\n"))
+
+
+;;; Verse Block
+(defun org-asciidoc-verse-block (verse-block contents info)
+  "Transcode VERSE-BLOCK element into AsciiDoc format.  VERSE-BLOCK
+is nil. CONTENTS is the content of the block.  INFO is a plist
+holding contextual information."
+  (concat "[verse]\n____\n"
+          contents
+          "____\n"))
 
 
 ;;; Fixed Width
