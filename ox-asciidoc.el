@@ -65,8 +65,8 @@
     (italic . org-asciidoc-italic)
     (item . org-asciidoc-item)
     (keyword . (lambda (&rest args) ""))
-    (latex-environment . org-asciidoc-identity)
-    (latex-fragment . org-asciidoc-identity)
+    (latex-environment . org-asciidoc-latex-environment)
+    (latex-fragment . org-asciidoc-latex-fragment)
     (line-break . org-asciidoc-identity)
     (link . org-asciidoc-link)
     (node-property . org-asciidoc-identity)
@@ -96,7 +96,8 @@
     (verse-block . org-asciidoc-identity))
   :options-alist
   '((:headline-levels nil nil 4 t)
-    (:asciidoc-docinfo nil "asciidoc-docinfo" org-asciidoc-docinfo))
+    (:asciidoc-docinfo nil "asciidoc-docinfo" org-asciidoc-docinfo)
+    (:asciidoc-latex nil "asciidoc-latex" org-asciidoc-latex))
   :menu-entry
   '(?a "Export to Asciidoc"
        ((?a "As Asciidoc buffer"
@@ -107,6 +108,28 @@
 	    (lambda (a s v b)
 	      (if a (org-asciidoc-export-to-asciidoc t s v)
 		(org-open-file (org-asciidoc-export-to-asciidoc nil s v))))))))
+
+(defcustom org-asciidoc-latex 'asciidoctor-latex
+  "LaTeX style used in the Asciidoc document.
+Currently supported are:
+
+stem-latexmath:
+can be used with asciidoctor
+Fragments are translated into latexmath:[...]
+environments are translated into
+[latexmath]
+++++
+...
+++++
+
+asciidoctor-latex:
+can be used with asciidoctor-latex
+See URL `https://github.com/asciidoctor/asciidoctor-latex/'
+Fragments and environments are copied literally
+into the adoc document."
+  :group 'org-export-asciidoc
+  :type '(menu-choice (item stem-latexmath) (item asciidoctor-latex))
+  )
 
 (defcustom org-asciidoc-docinfo nil
   "Whether to use ':docinfo:'"
@@ -161,6 +184,68 @@ CONTENTS is the headline contents."
     (when caption
       (concat "." (org-export-data caption info) "\n"))))
 
+;;; LaTeX
+(defun org-asciidoc-latex (equation-type latex contents info)
+  "Transcode LATEX into AsciiDoc format.
+EQUATION-TYPE can either be \"environment\" or \"fragment\".
+CONTENTS is the contents of the LaTeX environment.  INFO is a plist holding
+contextual information."
+  (let* ((latex-style (plist-get info :asciidoc-latex))
+	 (fun (intern-soft (format "org-asciidoc-latex-%s/%s" equation-type latex-style))))
+    (if (functionp fun)
+	(funcall fun latex contents info)
+      (user-error (format "Latex style %s not supported" latex-style)))))
+
+(defun org-asciidoc-latex-environment (latex-environment contents info)
+  "Transcode LATEX-ENVIRONMENT into AsciiDoc format.
+This is the specialization for :stem: latexmath.
+CONTENTS is the contents of the LaTeX environment.  INFO is a plist holding
+contextual information."
+  (org-asciidoc-latex 'environment latex-environment contents info))
+
+(defun org-asciidoc-latex-fragment (latex-fragment contents info)
+  "Transcode LATEX-FRAGMENT into AsciiDoc format.
+CONTENTS is the contents of the LaTeX fragment.  INFO is a plist holding
+contextual information."
+  (org-asciidoc-latex 'fragment latex-fragment contents info))
+
+(defun org-asciidoc-latex-environment/stem-latexmath (latex-environment contents info)
+  "Transcode LATEX-ENVIRONMENT into AsciiDoc format.
+This is the specialization for :stem: latexmath.
+CONTENTS is the contents of the LaTeX environment.  INFO is a plist holding
+contextual information."
+  (let ((val (org-trim (org-element-property :value latex-environment))))
+    (when (org-string-nw-p val)
+      (format "\n[latexmath]\n++++\n%s\n++++\n" val)
+      )))
+
+(defun org-asciidoc-latex-fragment/stem-latexmath (latex-fragment contents info)
+  "Transcode LATEX-FRAGMENT into AsciiDoc format.
+This is the specialization for :stem: latexmath.
+CONTENTS is the contents of the LaTeX fragment.  INFO is a plist holding
+contextual information."
+  (let ((val (replace-regexp-in-string
+	      "\\`\\(?:\\$\\|\\\\(\\)\\(.*\\)\\(?:\\$\\|\\\\(\\)\\'" "\\1"
+	      (org-element-property :value latex-fragment))))
+    (setq val (replace-regexp-in-string "\\]" "\\\\]" val))
+    (format "latexmath:[%s]" val)
+    ))
+
+(defalias 'org-asciidoc-latex-environment/asciidoctor-latex #'org-asciidoc-identity
+  "Transcode LATEX-ENVIRONMENT into AsciiDoc format.
+This is the specialization for program asciidoctor-latex.
+CONTENTS is the contents of the LaTeX environment.  INFO is a plist holding
+contextual information.")
+
+(defalias 'org-asciidoc-latex-fragment/asciidoctor-latex #'org-asciidoc-identity
+  "Transcode LATEX-FRAGMENT into AsciiDoc format.
+This is the specialization for :stem: latexmath.
+CONTENTS is the contents of the LaTeX fragment.  INFO is a plist holding
+contextual information.")
+
+(defun org-asciidoc-latex-attr/stem-latexmath ()
+  "Return header attribute for LaTeXmath."
+  ":stem: latexmath\n")
 
 ;;; List
 (defun org-asciidoc-plain-list (plain-list contents info)
@@ -398,7 +483,8 @@ be converted with AsciiDoc's image macro."
 	(author (org-asciidoc-info-get-with info :author))
 	(email (org-asciidoc-info-get-with info :email))
         (date (org-asciidoc-info-get-with info :date))
-        (docinfo (plist-get info :asciidoc-docinfo)))
+        (docinfo (plist-get info :asciidoc-docinfo))
+	(latex-transcoder (plist-get info :asciidoc-latex)))
     (concat
      ;; The first line, title
      (format "= %s =\n" title)
@@ -417,6 +503,9 @@ be converted with AsciiDoc's image macro."
      ;; Add docinfo line if needed
      (when docinfo
        ":docinfo:\n")
+     (let ((get-latex-attr (intern-soft (format "org-asciidoc-latex-attr/%s" latex-transcoder))))
+       (when (functionp get-latex-attr)
+	 (funcall get-latex-attr)))
      ;; add another new line for preamble
      "\n")))
 
