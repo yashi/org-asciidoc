@@ -63,7 +63,19 @@ John Smith
 2001-01-01
 
 ")
-  )
+
+  (org-asciidoc-test-transcode-with-template
+   "#+Title: This is the title
+#+AUTHOR: John Smith
+#+Date: 2001-01-01
+#+options: asciidoc-latex:stem-latexmath"
+
+   "= This is the title =
+John Smith
+2001-01-01
+:stem: latexmath
+
+"))
 
 (ert-deftest test-org-asciidoc/title-with-docinfo ()
   (org-asciidoc-test-transcode-with-template
@@ -75,6 +87,7 @@ John Smith
 John Smith
 
 ")
+
   (org-asciidoc-test-transcode-with-template
    "#+Title: This is the title
 #+AUTHOR: John Smith
@@ -84,8 +97,7 @@ John Smith
 John Smith
 :docinfo:
 
-")
-  )
+"))
 
 (defun org-asciidoc-test-transcode-body (str1 str2)
   (should (equal (org-test-with-temp-text str1
@@ -180,6 +192,55 @@ John Smith
 == 3rd headline ==
 "))
 
+;;; LaTeX
+(ert-deftest test-org-asciidoc/latex-environment ()
+  (let ((org-asciidoc-latex 'stem-latexmath))
+    (org-asciidoc-test-transcode-body
+     "Before
+\\begin{align*}
+z=\\sqrt[3]{x^3+y^3}
+\\end{align*}"
+
+     "Before
+
+[latexmath]
+++++
+\\begin{align*}
+z=\\sqrt[3]{x^3+y^3}
+\\end{align*}
+++++
+"))
+  (let ((org-asciidoc-latex 'asciidoctor-latex))
+    (org-asciidoc-test-transcode-body
+     "Before
+\\begin{align*}
+z=\\sqrt[3]{x^3+y^3}
+\\end{align*}
+"
+
+     "Before
+\\begin{align*}
+z=\\sqrt[3]{x^3+y^3}
+\\end{align*}
+")))
+
+(ert-deftest test-org-asciidoc/latex-fragment ()
+  (let ((org-asciidoc-latex 'stem-latexmath))
+    (org-asciidoc-test-transcode-body
+     "Before $z=\\sqrt[3]{x^3+y^3}$ after.
+"
+
+     "Before latexmath:[z=\\sqrt[3\\]{x^3+y^3}] after.
+"))
+
+  (let ((org-asciidoc-latex 'asciidoctor-latex))
+    (org-asciidoc-test-transcode-body
+     "Before $z=\\sqrt[3]{x^3+y^3}$ after.
+"
+
+     "Before $z=\\sqrt[3]{x^3+y^3}$ after.
+")))
+
 ;;; List
 (ert-deftest test-org-asciidoc/list-unordered ()
   (org-asciidoc-test-transcode-body
@@ -254,8 +315,7 @@ John Smith
 // ^
 
 . list 2
-. list 3\n")
-  )
+. list 3\n"))
 
 (ert-deftest test-org-asciidoc/list-ordered-continuation ()
   (org-asciidoc-test-transcode-body
@@ -308,8 +368,7 @@ this is baz
 
    "\n== this is a headline ==
 * and this is a list
-** and org allows any list to start right after it\n")
-    )
+** and org allows any list to start right after it\n"))
 
 (ert-deftest test-org-asciidoc/list-description ()
   (org-asciidoc-test-transcode-body
@@ -712,5 +771,4 @@ multi-lines
 | Peter| 1234| 17
 | Anna| 4321| 25
 |====
-")
-  )
+"))
