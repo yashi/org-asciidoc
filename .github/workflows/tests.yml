@@ -24,7 +24,7 @@ jobs:
           version: ${{ matrix.emacs }}
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Checkout Org-Mode
         run: git clone --depth=1 --branch ${{matrix.orgmode}} git://git.savannah.gnu.org/emacs/org-mode.git ../org-mode
