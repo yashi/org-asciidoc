@@ -136,6 +136,11 @@ into the adoc document."
   :group 'org-export-asciidoc
   :type 'boolean)
 
+(defcustom org-asciidoc-file-extension ".adoc"
+  "Default extension of asciidoc generated file."
+  :group 'org-export-asciidoc
+  :type 'string)
+
 (defun org-asciidoc-identity (blob contents info)
   "Transcode BLOB element or object back into Org syntax.
 CONTENTS is its contents, as a string or nil.  INFO is ignored."
@@ -589,7 +594,7 @@ contents of hidden elements.
 
 Return output file name."
   (interactive)
-  (let ((outfile (org-export-output-file-name ".txt" subtreep)))
+  (let ((outfile (org-export-output-file-name org-asciidoc-file-extension subtreep)))
     (org-export-to-file 'asciidoc outfile async subtreep visible-only)))
 
 ;;;###autoload
@@ -601,7 +606,7 @@ is the property list for the given project.  PUB-DIR is the
 publishing directory.
 
 Return output file name."
-  (org-publish-org-to 'asciidoc filename ".txt" plist pub-dir))
+  (org-publish-org-to 'asciidoc filename org-asciidoc-file-extension plist pub-dir))
 
 (provide 'ox-asciidoc)
 
