@@ -50,11 +50,77 @@
 
    "= This is the title =
 John Smith
+:toc:
 
 ")
 
   (org-asciidoc-test-transcode-with-template
    "#+Title: This is the title
+#+AUTHOR: John Smith
+#+Date: 2001-01-01"
+
+   "= This is the title =
+John Smith
+2001-01-01
+:toc:
+
+")
+
+  (org-asciidoc-test-transcode-with-template
+   "#+Title: This is the title
+#+AUTHOR: John Smith
+#+Date: 2001-01-01
+#+options: asciidoc-latex:stem-latexmath"
+
+   "= This is the title =
+John Smith
+2001-01-01
+:toc:
+:stem: latexmath
+
+")
+
+  (org-asciidoc-test-transcode-with-template
+   "#+Title: This is the title
+#+AUTHOR: John Smith
+#+Date: 2001-01-01
+#+options: toc:4"
+
+   "= This is the title =
+John Smith
+2001-01-01
+:toc:
+:toclevels: 4
+
+")
+
+  (org-asciidoc-test-transcode-with-template
+   "#+Title: This is the title
+#+AUTHOR: John Smith
+#+Date: 2001-01-01
+#+options: toc:t"
+
+   "= This is the title =
+John Smith
+2001-01-01
+:toc:
+
+"))
+
+(ert-deftest test-org-asciidoc/title-without-toc ()
+  (org-asciidoc-test-transcode-with-template
+   "#+AUTHOR: John Smith
+#+Title: This is the title
+#+options: toc:nil"
+
+   "= This is the title =
+John Smith
+
+")
+
+  (org-asciidoc-test-transcode-with-template
+   "#+Title: This is the title
+#+options: toc:nil
 #+AUTHOR: John Smith
 #+Date: 2001-01-01"
 
@@ -68,7 +134,7 @@ John Smith
    "#+Title: This is the title
 #+AUTHOR: John Smith
 #+Date: 2001-01-01
-#+options: asciidoc-latex:stem-latexmath"
+#+options: asciidoc-latex:stem-latexmath toc:nil"
 
    "= This is the title =
 John Smith
@@ -81,7 +147,7 @@ John Smith
   (org-asciidoc-test-transcode-with-template
    "#+Title: This is the title
 #+AUTHOR: John Smith
-#+OPTIONS: asciidoc-docinfo:nil"
+#+OPTIONS: asciidoc-docinfo:nil toc:nil"
 
    "= This is the title =
 John Smith
@@ -91,7 +157,7 @@ John Smith
   (org-asciidoc-test-transcode-with-template
    "#+Title: This is the title
 #+AUTHOR: John Smith
-#+OPTIONS: asciidoc-docinfo:t"
+#+OPTIONS: asciidoc-docinfo:t toc:nil"
 
    "= This is the title =
 John Smith
