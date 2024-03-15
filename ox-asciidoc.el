@@ -509,7 +509,8 @@ be converted with AsciiDoc's image macro."
 	(email (org-asciidoc-info-get-with info :email))
         (date (org-asciidoc-info-get-with info :date))
         (docinfo (plist-get info :asciidoc-docinfo))
-	(latex-transcoder (plist-get info :asciidoc-latex)))
+	(latex-transcoder (plist-get info :asciidoc-latex))
+        (depth (plist-get info :with-toc)))
     (concat
      ;; The first line, title
      (format "= %s =\n" title)
@@ -528,6 +529,10 @@ be converted with AsciiDoc's image macro."
      ;; Add docinfo line if needed
      (when docinfo
        ":docinfo:\n")
+     (when depth
+       ":toc:\n")
+     (when (wholenump depth)
+       (format ":toclevels: %d\n" depth))
      (let ((get-latex-attr (intern-soft (format "org-asciidoc-latex-attr/%s" latex-transcoder))))
        (when (functionp get-latex-attr)
 	 (funcall get-latex-attr)))
