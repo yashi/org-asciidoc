@@ -558,6 +558,9 @@ int main() {return 0;}
 "))
 
 (ert-deftest test-org-asciidoc/block-source-with-attr-asciidoctor-diagram ()
+  "Before Org v9.7, :file parameter is not passed to exporter when
+\":export code\" is specified, and execution fails. Give
+non-standard param `diagram' so that :file is preserved."
   (org-asciidoc-test-transcode-body
    "#+ATTR_ASCIIDOC: :asciidoctor-diagram t
 #+BEGIN_SRC ditaa :file images/hello-world.png :exports diagram code
@@ -597,26 +600,46 @@ Alice <-- Bob: Another authentication Response
 ----
 "))
 
-(ert-deftest test-org-asciidoc/block-source-with-attr-asciidoctor-diagram-failure ()
-  "with :export code, :file parameter is not passed to exporter
-and failed.  Give non-standard param `diagram' so that :file is
-preserved."
+(when (version-list-< (version-to-list (org-version)) '(9 7 -1))
+  (ert-deftest test-org-asciidoc/block-source-with-attr-asciidoctor-diagram-failure ()
+    "Before Org v9.7, :file parameter is not passed to exporter when
+\":export code\" is specified, and execution fails.  This test
+checks it actually failes."
     :expected-result :failed
-  (org-asciidoc-test-transcode-body
-   "#+ATTR_ASCIIDOC: :asciidoctor-diagram t
+    (org-asciidoc-test-transcode-body
+     "#+ATTR_ASCIIDOC: :asciidoctor-diagram t
 #+BEGIN_SRC ditaa :file images/hello-world.png :exports code
 +--------------+
 | Hello World! |
 +--------------+
 #+END_SRC"
 
-   "[ditaa, target=images/hello-world, format=png]
+     "[ditaa, target=images/hello-world, format=png]
 ----
 +--------------+
 | Hello World! |
 +--------------+
 ----
-"))
+")))
+
+(when (version-list-<= '(9 7) (version-to-list (org-version)))
+  (ert-deftest test-org-asciidoc/block-source-with-attr-asciidoctor-diagram-since-9.7 ()
+    "Since Org v9.7 :file parameter is passed to exporter."
+    (org-asciidoc-test-transcode-body
+     "#+ATTR_ASCIIDOC: :asciidoctor-diagram t
+#+BEGIN_SRC ditaa :file images/hello-world.png :exports code
++--------------+
+| Hello World! |
++--------------+
+#+END_SRC"
+
+     "[ditaa, target=images/hello-world, format=png]
+----
++--------------+
+| Hello World! |
++--------------+
+----
+")))
 
 ;;; Example Blocks to Listing Blocks
 (ert-deftest test-org-asciidoc/block-example-to-listing-block ()
