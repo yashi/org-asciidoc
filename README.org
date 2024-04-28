@@ -27,8 +27,9 @@ AsciiDoc backend understands the following attributes in a
      [[https://docs.asciidoctor.org/diagram-extension/latest/][Asciidoctor Diagram]]. Set it as ~t~ to generate a listing block
      for an asciidoctor diagram.
 
-     Make sure to set ~:exports~ to something non-standard, ~diagram~.
-     This allows us to get ~:file~ parameter in the exporter.
+     If you are using Org v9.6 or earlier, make sure to set ~:exports~
+     to something non-standard, such as ~diagram~.  This allows us to
+     get ~:file~ parameter in the exporter.
 
      e.g)
      #+begin_src org
