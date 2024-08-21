@@ -475,7 +475,6 @@ Image files without description should be inlined, so they will
 be converted with AsciiDoc's image macro."
   (let ((type (org-element-property :type link))
 	(path (org-element-property :path link)))
-    (message (org-export-read-attribute :attr_asciidoc link))
     (cond
      ((and (not desc) (org-file-image-p path))
       (if (string= type "file")
