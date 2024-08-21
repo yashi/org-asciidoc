@@ -297,7 +297,8 @@ contextual information."
   "Transcode an ITEM element into AsciiDoc format.
 CONTENTS holds the contents of the item.  INFO is a plist holding
 contextual information."
-  (let ((lines (split-string (replace-regexp-in-string "\n\\'" "" contents) "\n")))
+  (let ((lines (and contents
+                    (split-string (replace-regexp-in-string "\n\\'" "" contents) "\n"))))
     (format "%s %s"
             (org-asciidoc-list-item-delimiter item info)
             (mapconcat (lambda (line)

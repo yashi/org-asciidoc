@@ -331,6 +331,12 @@ z=\\sqrt[3]{x^3+y^3}
 **** list
 ***** list\n"))
 
+(ert-deftest test-org-asciidoc/list-unordered-empty ()
+  (org-asciidoc-test-transcode-body
+   "- \n"
+   "* \n")
+)
+
 (ert-deftest test-org-asciidoc/list-ordered ()
   (org-asciidoc-test-transcode-body
    "1. list 1
