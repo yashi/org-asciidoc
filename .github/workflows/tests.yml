@@ -29,7 +29,7 @@ jobs:
         uses: actions/checkout@v5
 
       - name: Checkout Org-Mode
-        run: git clone --depth=1 --branch ${{matrix.orgmode}} git://git.savannah.gnu.org/emacs/org-mode.git ../org-mode
+        run: git clone --depth=1 --branch ${{matrix.orgmode}} https://https.git.savannah.gnu.org/git/emacs/org-mode.git ../org-mode
 
       - name: Generate Autoload
         run: |
