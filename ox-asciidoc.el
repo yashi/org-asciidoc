@@ -67,7 +67,7 @@
     (keyword . (lambda (&rest args) ""))
     (latex-environment . org-asciidoc-latex-environment)
     (latex-fragment . org-asciidoc-latex-fragment)
-    (line-break . org-asciidoc-identity)
+    (line-break . org-asciidoc-line-break)
     (link . org-asciidoc-link)
     (node-property . org-asciidoc-identity)
     (paragraph . org-asciidoc-identity)
@@ -166,6 +166,8 @@ CONTENTS is its contents, as a string or nil.  INFO is ignored."
 (defun org-asciidoc-verbatim (verbatim contents info)
   (concat "`" (org-asciidoc-encode-plain-text (org-element-property :value verbatim)) "`"))
 
+(defun org-asciidoc-line-break (line-break contents info)
+  " +\n")
 
 ;;; Head Line
 (defun org-asciidoc-headline (headline contents info)
