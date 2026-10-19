@@ -1,0 +1,11 @@
+autofix: false
+
+ignore:
+  - /.git
+  - "*.svg"
+
+rules:
+  end-of-file:
+    enable: true
+    disable-autofix: true
+    single-new-line: true
