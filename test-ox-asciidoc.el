@@ -610,7 +610,7 @@ Alice <-- Bob: Another authentication Response
   (ert-deftest test-org-asciidoc/block-source-with-attr-asciidoctor-diagram-failure ()
     "Before Org v9.7, :file parameter is not passed to exporter when
 \":export code\" is specified, and execution fails.  This test
-checks it actually failes."
+checks it actually fails."
     :expected-result :failed
     (org-asciidoc-test-transcode-body
      "#+ATTR_ASCIIDOC: :asciidoctor-diagram t
