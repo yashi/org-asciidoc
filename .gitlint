@@ -1,0 +1,8 @@
+[general]
+regex-style-search=true
+
+[ignore-body-lines]
+regex=^(?:(?:Signed-off|Acked|Co-authored|Reported|Tested|Assisted)-by: |\[\d+\]: https:\/\/)
+
+[title-match-regex]
+regex=^(([a-z0-9._-]+: )+)?[A-Z].*
